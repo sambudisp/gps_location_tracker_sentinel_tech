@@ -1,0 +1,23 @@
+{
+  "appName": "Location Tracker - Sentinel Tech",
+  "appNameTitle": "Location Tracker",
+  "sentinelTech" : "Sentinel Tech",
+  "loadingLabel" : "Loading",
+  "cancelLabel" : "Cancel",
+  "yesLabel" : "Yes",
+  "okLabel" : "OK",
+  "trackNowLabel" : "Track Now",
+  "locationHistoryLabel" : "Location History",
+  "locationTrackingActiveLabel": "Tracking your location",
+  "locationTrackingInstructionLabel": "Tap 'Track Now' to start tracking",
+  "locationTrackingStopConfirmation": "Stop tracking your location?",
+  "locationTrackingSavedMessage": "Location saved!",
+  "durationLabel": "Duration",
+  "sessionLabel": "Session",
+  "deleteAllLabel": "Delete All",
+  "emptyStateTitle": "No history yet",
+  "emptyStateBody": "Start tracking to see your\nlocation sessions here.",
+  "settingLabel": "Setting"
+
+
+}
