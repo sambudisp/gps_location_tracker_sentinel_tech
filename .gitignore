@@ -48,3 +48,9 @@ app.*.map.json
 .fvm/
 
 .env
+secrets.properties
+android/key.properties
+*.xcconfig
+!ios/Flutter/Debug.xcconfig
+!ios/Flutter/Release.xcconfig
+ios/Flutter/Secret.xcconfig
