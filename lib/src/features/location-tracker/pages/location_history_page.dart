@@ -1,102 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gps_location_tracker_sentinel_tech/assets/colors.gen.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/components/components.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/constants/app_decoration.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/core/core.dart';
 
-class LocationHistoryModel {
-  final String id;
-  final String title;
-  final DateTime startTime;
-  final DateTime endTime;
-
-  const LocationHistoryModel({required this.id, required this.title, required this.startTime, required this.endTime});
-
-  String get duration {
-    final diff = endTime.difference(startTime);
-    final h = diff.inHours;
-    final m = diff.inMinutes % 60;
-    if (h > 0) return '${h}h ${m}m';
-    return '${m}m';
-  }
-}
-
-final List<LocationHistoryModel> _dummyData = [
-  LocationHistoryModel(
-    id: '1',
-    title: 'Morning commute',
-    startTime: DateTime(2026, 4, 11, 8, 12),
-    endTime: DateTime(2026, 4, 11, 8, 47),
-  ),
-  LocationHistoryModel(
-    id: '2',
-    title: 'Office area patrol',
-    startTime: DateTime(2026, 4, 11, 10, 30),
-    endTime: DateTime(2026, 4, 11, 11, 15),
-  ),
-  LocationHistoryModel(
-    id: '3',
-    title: 'Lunch run',
-    startTime: DateTime(2026, 4, 11, 12, 5),
-    endTime: DateTime(2026, 4, 11, 12, 38),
-  ),
-  LocationHistoryModel(
-    id: '4',
-    title: 'Field visit',
-    startTime: DateTime(2026, 4, 10, 14, 0),
-    endTime: DateTime(2026, 4, 10, 16, 22),
-  ),
-  LocationHistoryModel(
-    id: '5',
-    title: 'Client meeting route',
-    startTime: DateTime(2026, 4, 10, 9, 0),
-    endTime: DateTime(2026, 4, 10, 9, 45),
-  ),
-  LocationHistoryModel(
-    id: '6',
-    title: 'Evening walk',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '7',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '8',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '9',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '10',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '11',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-  LocationHistoryModel(
-    id: '12',
-    title: 'Evening walk 2',
-    startTime: DateTime(2026, 1, 2, 18, 0),
-    endTime: DateTime(2026, 1, 2, 18, 40),
-  ),
-];
+import '../../../../assets/colors.gen.dart';
+import '../../../core/core.dart';
+import '../core/helpers/time_helper.dart';
+import '../data/data.dart';
+import '../managers/bloc.dart';
 
 class LocationHistoryPage extends StatefulWidget {
   const LocationHistoryPage({super.key});
@@ -106,121 +19,116 @@ class LocationHistoryPage extends StatefulWidget {
 }
 
 class _LocationHistoryPageState extends State<LocationHistoryPage> {
-  late List<LocationHistoryModel> _items;
-
   @override
   void initState() {
     super.initState();
-    _items = List.from(_dummyData);
+    context.read<LocationTrackerBloc>().add(const LocationTrackerEvent.getTrackedLocationHistory());
   }
 
-  // ─── Helpers ───────────────────────────────────────────────────────────────
-
-  Map<DateTime, List<LocationHistoryModel>> get _grouped {
-    final map = <DateTime, List<LocationHistoryModel>>{};
-    for (final item in _items) {
-      final date = DateTime(item.startTime.year, item.startTime.month, item.startTime.day);
-      map.putIfAbsent(date, () => []).add(item);
+  Map<DateTime, List<TrackedLocationDataModel>> _grouped(List<TrackedLocationDataModel> items) {
+    final map = <DateTime, List<TrackedLocationDataModel>>{};
+    for (final item in items) {
+      final date = DateTime.parse(item.startedTime);
+      final dateOnly = DateTime(date.year, date.month, date.day);
+      map.putIfAbsent(dateOnly, () => []).add(item);
     }
     return Map.fromEntries(map.entries.toList()..sort((a, b) => b.key.compareTo(a.key)));
   }
 
   String _formatSectionDate(DateTime date) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
-    if (date == today) return 'Today';
-    if (date == yesterday) return 'Yesterday';
+    if (date == today) return l10n.todayLabel;
+    if (date == yesterday) return l10n.yesterdayLabel;
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
-  String _formatItemDate(DateTime dt) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
-  }
-
-  String _formatTime(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
-
-  // ─── Actions ───────────────────────────────────────────────────────────────
-
-  void _deleteItem(LocationHistoryModel item) {
-    setState(() => _items.removeWhere((e) => e.id == item.id));
-  }
-
-  void _confirmDelete(LocationHistoryModel item) {
+  void _confirmDelete(TrackedLocationDataModel item) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (_) => CustomDialog.info(
         twoButtonVariants: true,
-        title: 'Are you sure want to delete?',
-        description: '"${item.title}" will be permanently deleted. This action cannot be undone.',
-        onPositiveTap: () => _deleteItem(item),
+        title: l10n.deleteTrackedLocationConfirmationTitle,
+        description: l10n.deleteTrackedLocationConfirmationBody(item.id.toString()),
+        onPositiveTap: () {
+          context.read<LocationTrackerBloc>().add(LocationTrackerEvent.deleteTrackedLocationHistory(id: item.id));
+        },
       ),
     );
   }
 
   void _confirmDeleteAll() {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (_) => CustomDialog.info(
         twoButtonVariants: true,
-        title: 'Are you sure want to delete all?',
-        description: 'All location history will be permanently deleted. This action cannot be undone.',
-        onPositiveTap: () => setState(() => _items.clear()),
+        title: l10n.deleteAllDataConfirmationTitle,
+        description: l10n.deleteAllDataConfirmationBody,
+        onPositiveTap: () {
+          context.read<LocationTrackerBloc>().add(LocationTrackerEvent.deleteAllTrackedLocationHistory());
+        },
       ),
     );
   }
 
-  // ─── Build ─────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
-    final grouped = _grouped;
+    return BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
+      buildWhen: (prev, curr) =>
+          prev.stateTrackedLocationHistory != curr.stateTrackedLocationHistory ||
+          prev.trackedLocationHistory != curr.trackedLocationHistory,
+      builder: (context, state) {
+        final items = state.trackedLocationHistory;
+        final grouped = _grouped(items);
 
-    return Scaffold(
-      body: Container(
-        decoration: AppDecorations.mainGradientBackground,
-        child: SafeArea(
-          child: Column(
-            children: [
-              _appBar(),
-              context.vWhitespace(4),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: context.borderRadius20pt,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    decoration: BoxDecoration(color: ColorName.grey, borderRadius: context.borderRadius20pt),
-                    child: Column(
-                      children: [
-                        _header(),
-                        Expanded(
-                          child: _items.isEmpty
-                              ? _emptyState()
-                              : ListView.builder(
-                                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                                  itemCount: grouped.length,
-                                  itemBuilder: (context, i) {
-                                    final date = grouped.keys.elementAt(i);
-                                    final sessions = grouped[date]!;
-                                    return _buildSection(date, sessions);
-                                  },
-                                ),
+        return Scaffold(
+          body: Container(
+            decoration: AppDecorations.mainGradientBackground,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _appBar(),
+                  context.vWhitespace(4),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: context.borderRadius20pt,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        decoration: BoxDecoration(color: ColorName.grey, borderRadius: context.borderRadius20pt),
+                        child: Column(
+                          children: [
+                            _header(items),
+                            Expanded(
+                              child: state.stateTrackedLocationHistory == RequestStatus.loading
+                                  ? const Center(child: CircularProgressIndicator())
+                                  : items.isEmpty
+                                  ? _emptyState()
+                                  : ListView.builder(
+                                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                                      itemCount: grouped.length,
+                                      itemBuilder: (context, i) {
+                                        final date = grouped.keys.elementAt(i);
+                                        final sessions = grouped[date]!;
+                                        return _listSection(date, sessions);
+                                      },
+                                    ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -234,15 +142,15 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
             child: Container(
               width: 36,
               height: 36,
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), shape: BoxShape.circle),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
+              decoration: BoxDecoration(color: ColorName.white.withValues(alpha: 0.15), shape: BoxShape.circle),
+              child: const Icon(Icons.arrow_back, color: ColorName.white, size: 18),
             ),
           ),
           Expanded(
             child: Text(
               context.l10n.locationHistoryLabel,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+              style: TextStyle(color: ColorName.white, fontSize: 16, fontWeight: FontWeight.w800),
             ),
           ),
           context.hWhitespace(16),
@@ -251,17 +159,17 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
     );
   }
 
-  Widget _header() {
+  Widget _header(List<TrackedLocationDataModel> items) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '${_items.length} ${context.l10n.sessionLabel.toLowerCase()}${_items.length != 1 ? 's' : ''}',
+            '${items.length} ${context.l10n.sessionLabel.toLowerCase()}${items.length != 1 ? 's' : ''}',
             style: TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w700),
           ),
-          if (_items.isNotEmpty)
+          if (items.isNotEmpty)
             GestureDetector(
               onTap: _confirmDeleteAll,
               child: Text(
@@ -274,7 +182,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
     );
   }
 
-  Widget _buildSection(DateTime date, List<LocationHistoryModel> sessions) {
+  Widget _listSection(DateTime date, List<TrackedLocationDataModel> sessions) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -282,7 +190,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
           padding: const EdgeInsets.only(top: 8, bottom: 6),
           child: Text(
             _formatSectionDate(date),
-            style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w700),
+            style: const TextStyle(color: ColorName.darkGrey, fontSize: 12, fontWeight: FontWeight.w700),
           ),
         ),
         ...sessions.map((item) => _historyItem(item)),
@@ -290,12 +198,16 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
     );
   }
 
-  Widget _historyItem(LocationHistoryModel item) {
+  Widget _historyItem(TrackedLocationDataModel item) {
+    final start = DateTime.parse(item.startedTime);
+    final end = item.stoppedTime != null ? DateTime.parse(item.stoppedTime!) : null;
+    final l10n = context.l10n;
+
     return Dismissible(
-      key: Key(item.id),
+      key: Key(item.id.toString()),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async {
-        _confirmDelete(item);
+        if (item.stoppedTime != null) _confirmDelete(item);
         return false;
       },
       background: Container(
@@ -303,11 +215,11 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
         padding: const EdgeInsets.only(right: 16),
         margin: const EdgeInsets.only(bottom: 6),
         decoration: BoxDecoration(color: ColorName.red, borderRadius: context.borderRadius12pt),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 22),
+        child: const Icon(Icons.delete_outline, color: ColorName.white, size: 22),
       ),
       child: GestureDetector(
         onTap: () {
-          context.pushNamed(LocationTrackerRouter.locationHistoryDetail);
+          context.pushNamed(LocationTrackerRouter.locationHistoryDetail, extra: item);
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 6),
@@ -318,26 +230,31 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
               Container(
                 width: 10,
                 height: 10,
-                decoration: const BoxDecoration(color: ColorName.primary, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: end != null ? ColorName.primary : ColorName.green,
+                  shape: BoxShape.circle,
+                ),
               ),
-              const SizedBox(width: 10),
+              context.hWhitespace(10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tracked Loc. ${item.id}',
+                      l10n.trackedLocTitle(item.id.toString()),
                       style: const TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                     context.vWhitespace(4),
                     Text(
-                      '${_formatTime(item.startTime)} — ${_formatTime(item.endTime)}  ·  ${item.duration}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 11),
+                      end != null
+                          ? '${TimeHelper().formatTime(start)} — ${TimeHelper().formatTime(end)}  ·  ${TimeHelper().duration(item.duration)}'
+                          : '${TimeHelper().formatTime(start)} — ${l10n.ongoingLabel}',
+                      style: TextStyle(color: end != null ? ColorName.darkGrey : ColorName.green, fontSize: 10),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: Colors.grey, size: 18),
+              const Icon(Icons.chevron_right, color: ColorName.darkGrey, size: 18),
             ],
           ),
         ),
@@ -360,7 +277,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
           Text(
             context.l10n.emptyStateBody,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey, fontSize: 14),
+            style: TextStyle(color: ColorName.darkGrey, fontSize: 14),
           ),
         ],
       ),

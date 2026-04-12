@@ -1,14 +1,17 @@
-enum DbStatus {
+enum RequestStatus {
   idle,
   loading,
   success,
-  error;
+  error,
+  restored;
 
-  bool get isIdle => this == DbStatus.idle;
+  bool get isIdle => this == RequestStatus.idle;
 
-  bool get isLoading => this == DbStatus.loading;
+  bool get isLoading => this == RequestStatus.loading;
 
-  bool get isSuccess => this == DbStatus.success;
+  bool get isSuccess => this == RequestStatus.success;
 
-  bool get isError => this == DbStatus.error;
+  bool get isError => this == RequestStatus.error;
+
+  bool get isRestored => this == RequestStatus.restored;
 }

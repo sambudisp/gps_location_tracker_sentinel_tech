@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/setting/data/data.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/setting/domain/domain.dart';
 
 import '../../../core/core.dart';
+import '../core/workers/location_foreground_service.dart';
 import '../data/data.dart';
 import '../domain/repositories/location_tracker_repository.dart';
 
@@ -22,18 +24,18 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
   LocationTrackerBloc(@visibleForTesting this.locationTrackerRepository, this.settingRepository)
     : super(const _Initial()) {
     on<_StartLocationTracking>((event, emit) async {
-      emit(state.copyWith(stateLocationTracking: DbStatus.loading));
+      emit(state.copyWith(stateLocationTracking: RequestStatus.loading));
       final startedTime = DateTime.now().toIso8601String();
       final data = TrackedLocationDataModel(startedTime: startedTime);
       final result = await locationTrackerRepository.inputTrackedLocationData(data);
       result.match(
         (err) {
-          emit(state.copyWith(stateLocationTracking: DbStatus.error, errorMessage: err.message));
+          emit(state.copyWith(stateLocationTracking: RequestStatus.error, errorMessage: err.message));
         },
-        (data) {
+        (data) async {
           emit(
             state.copyWith(
-              stateLocationTracking: DbStatus.success,
+              stateLocationTracking: RequestStatus.success,
               activeTrackingId: data.id,
               activeTrackingStartedTime: data.startedTime,
             ),
@@ -44,10 +46,12 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
     });
 
     on<_StopLocationTracking>((event, emit) async {
-      emit(state.copyWith(stateLocationTracking: DbStatus.loading));
+      emit(state.copyWith(stateLocationTracking: RequestStatus.loading));
 
       _intervalTimer?.cancel();
       _intervalTimer = null;
+
+      await LocationForegroundService.stop();
 
       final stoppedTime = DateTime.now().toIso8601String();
       final duration = DateTime.now().difference(DateTime.parse(state.activeTrackingStartedTime!)).inMilliseconds;
@@ -62,17 +66,17 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
         (err) {
           emit(
             state.copyWith(
-              stateLocationTracking: DbStatus.error,
+              stateLocationTracking: RequestStatus.error,
               errorMessage: err.message,
               activeTrackingId: null,
               activeTrackingStartedTime: null,
             ),
           );
         },
-        (data) {
+        (_) {
           emit(
             state.copyWith(
-              stateLocationTracking: DbStatus.success,
+              stateLocationTracking: RequestStatus.idle,
               activeTrackingId: null,
               activeTrackingStartedTime: null,
             ),
@@ -82,7 +86,15 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
     });
 
     on<_StartLocationTrackingByInterval>((event, emit) async {
-      _intervalTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      final intervalSetting = await settingRepository.getGpsTrackingInterval();
+      final interval = intervalSetting.fold(
+        (_) => GpsTrackingInterval.s10,
+        (value) => value ?? GpsTrackingInterval.s10,
+      );
+
+      _intervalTimer = Timer.periodic(interval.toIntervalDuration(), (_) async {
+        if (await FlutterForegroundTask.isRunningService) return;
+
         final accuracySetting = await settingRepository.getGpsAccuracy();
         final accuracyString =
             accuracySetting.fold((failure) => GpsAccuracy.high.name, (value) => value?.name) ?? GpsAccuracy.high.name;
@@ -99,6 +111,86 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
         );
 
         await locationTrackerRepository.inputTrackedLocationDataDetail(data);
+      });
+
+      await LocationForegroundService.start(parentId: state.activeTrackingId!, interval: interval);
+    });
+
+    on<_GetTrackedLocationHistory>((event, emit) async {
+      emit(state.copyWith(stateTrackedLocationHistory: RequestStatus.loading));
+      final result = await locationTrackerRepository.getTrackedLocationHistory();
+      result.match(
+        (err) {
+          emit(state.copyWith(stateTrackedLocationHistory: RequestStatus.error, errorMessage: err.message));
+        },
+        (data) {
+          emit(state.copyWith(stateTrackedLocationHistory: RequestStatus.success, trackedLocationHistory: data));
+        },
+      );
+    });
+
+    on<_GetTrackedLocationHistoryDetail>((event, emit) async {
+      emit(state.copyWith(stateTrackedLocationHistoryDetail: RequestStatus.loading));
+      final result = await locationTrackerRepository.getTrackedLocationHistoryDetail(parentId: event.parentId);
+      result.match(
+        (err) {
+          emit(state.copyWith(stateTrackedLocationHistoryDetail: RequestStatus.error, errorMessage: err.message));
+        },
+        (data) {
+          emit(
+            state.copyWith(
+              stateTrackedLocationHistoryDetail: RequestStatus.success,
+              trackedLocationHistoryDetail: data,
+            ),
+          );
+        },
+      );
+    });
+
+    on<_DeleteTrackedLocationHistory>((event, emit) async {
+      emit(state.copyWith(stateDeleteTrackedLocationHistory: RequestStatus.loading));
+      final result = await locationTrackerRepository.deleteTrackedLocationHistory(id: event.id);
+      result.match(
+        (err) {
+          emit(state.copyWith(stateDeleteTrackedLocationHistory: RequestStatus.error, errorMessage: err.message));
+        },
+        (_) {
+          final updatedList = state.trackedLocationHistory.where((e) => e.id != event.id).toList();
+          emit(
+            state.copyWith(
+              stateDeleteTrackedLocationHistory: RequestStatus.success,
+              trackedLocationHistory: updatedList,
+            ),
+          );
+        },
+      );
+    });
+
+    on<_DeleteAllTrackedLocationHistory>((event, emit) async {
+      emit(state.copyWith(stateDeleteTrackedLocationHistory: RequestStatus.loading));
+      final result = await locationTrackerRepository.deleteAllTrackedLocationHistory();
+      result.match(
+        (err) {
+          emit(state.copyWith(stateDeleteTrackedLocationHistory: RequestStatus.error, errorMessage: err.message));
+        },
+        (_) {
+          emit(state.copyWith(stateDeleteTrackedLocationHistory: RequestStatus.success, trackedLocationHistory: []));
+        },
+      );
+    });
+
+    on<_RestoreLocationTracking>((event, emit) async {
+      final result = await locationTrackerRepository.getActiveTracking();
+      result.match((_) => null, (data) {
+        if (data == null) return;
+        emit(
+          state.copyWith(
+            activeTrackingId: data.id,
+            activeTrackingStartedTime: data.startedTime,
+            stateLocationTracking: RequestStatus.restored,
+          ),
+        );
+        add(const LocationTrackerEvent.startLocationTrackingByInterval());
       });
     });
   }

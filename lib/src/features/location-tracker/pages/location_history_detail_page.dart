@@ -1,92 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/constants/app_decoration.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 
-// ─── Model ───────────────────────────────────────────────────────────────────
-
-class LocationHistoryDetailModel {
-  final String id;
-  final String title;
-  final DateTime startTime;
-  final DateTime endTime;
-  final List<LatLng> waypoints;
-
-  const LocationHistoryDetailModel({
-    required this.id,
-    required this.title,
-    required this.startTime,
-    required this.endTime,
-    required this.waypoints,
-  });
-
-  String get duration {
-    final diff = endTime.difference(startTime);
-    final h = diff.inHours;
-    final m = diff.inMinutes % 60;
-    if (h > 0) return '${h}h ${m}m';
-    return '${m}m';
-  }
-
-  double get distanceKm {
-    // TODO: hitung jarak real dari waypoints
-    return 0.0;
-  }
-}
-
-// ─── Dummy Data ───────────────────────────────────────────────────────────────
-
-final _dummyDetail = LocationHistoryDetailModel(
-  id: '1',
-  title: 'Morning commute',
-  startTime: DateTime(2026, 4, 11, 8, 12),
-  endTime: DateTime(2026, 4, 11, 8, 47),
-  waypoints: const [
-    LatLng(-6.2000, 106.8180), // Start
-    LatLng(-6.1985, 106.8165), // belok kiri
-    LatLng(-6.1970, 106.8190), // belok kanan
-    LatLng(-6.1958, 106.8175), // belok kiri
-    LatLng(-6.1945, 106.8205), // belok kanan
-    LatLng(-6.1930, 106.8185), // belok kiri
-    LatLng(-6.1918, 106.8215), // belok kanan
-    LatLng(-6.1905, 106.8200), // belok kiri
-    LatLng(-6.1890, 106.8230), // belok kanan
-    LatLng(-6.1878, 106.8210), // belok kiri
-    LatLng(-6.1865, 106.8245), // belok kanan
-    LatLng(-6.1850, 106.8225), // belok kiri
-    LatLng(-6.1835, 106.8255), // belok kanan
-    LatLng(-6.1820, 106.8270), // lurus sedikit
-    LatLng(-6.1900, 106.8320), // End
-  ],
-);
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+import '../../../../assets/colors.gen.dart';
+import '../../../core/core.dart';
+import '../core/helpers/time_helper.dart';
+import '../data/data.dart';
+import '../managers/bloc.dart';
 
 class LocationHistoryDetailPage extends StatefulWidget {
-  final LocationHistoryDetailModel? detail;
+  final TrackedLocationDataModel trackedLocationData;
 
-  const LocationHistoryDetailPage({super.key, this.detail});
+  const LocationHistoryDetailPage({super.key, required this.trackedLocationData});
 
   @override
   State<LocationHistoryDetailPage> createState() => _LocationHistoryDetailPageState();
 }
 
 class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
-  static const Color primary = Color(0xFF087dee);
-  static const Color darkBlue = Color(0xFF2E2E6A);
-  static const Color cardBg = Color(0xFFF0F4F8);
-
   GoogleMapController? _mapController;
-  late final LocationHistoryDetailModel _detail;
-  late final Set<Marker> _markers;
-  late final Set<Polyline> _polylines;
+  Set<Marker> _markers = {};
+  Set<Polyline> _polylines = {};
 
   @override
   void initState() {
     super.initState();
-    _detail = widget.detail ?? _dummyDetail;
-    _markers = _buildMarkers();
-    _polylines = _buildPolylines();
+    context.read<LocationTrackerBloc>().add(
+      LocationTrackerEvent.getTrackedLocationHistoryDetail(parentId: widget.trackedLocationData.id!),
+    );
   }
 
   @override
@@ -95,33 +37,31 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
     super.dispose();
   }
 
-  // ─── Map Helpers ───────────────────────────────────────────────────────────
+  void _mapData(List<TrackedLocationDataDetailModel> details) {
+    final l10n = context.l10n;
+    if (details.isEmpty) return;
+    final waypoints = details.map((e) => LatLng(e.latitude, e.longitude)).toList();
 
-  Set<Marker> _buildMarkers() {
-    if (_detail.waypoints.isEmpty) return {};
-    return {
+    _markers = {
       Marker(
-        markerId: const MarkerId('start'),
-        position: _detail.waypoints.first,
+        markerId: MarkerId(l10n.startLabel.toLowerCase()),
+        position: waypoints.first,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        infoWindow: const InfoWindow(title: 'Start'),
+        infoWindow: InfoWindow(title: l10n.startLabel),
       ),
       Marker(
-        markerId: const MarkerId('end'),
-        position: _detail.waypoints.last,
+        markerId: MarkerId(l10n.endLabel.toLowerCase()),
+        position: waypoints.last,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        infoWindow: const InfoWindow(title: 'End'),
+        infoWindow: InfoWindow(title: l10n.endLabel),
       ),
     };
-  }
 
-  Set<Polyline> _buildPolylines() {
-    if (_detail.waypoints.isEmpty) return {};
-    return {
+    _polylines = {
       Polyline(
         polylineId: const PolylineId('path'),
-        points: _detail.waypoints,
-        color: primary,
+        points: waypoints,
+        color: ColorName.primary,
         width: 4,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
@@ -130,68 +70,74 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
     };
   }
 
-  LatLngBounds _getBounds() {
-    final lats = _detail.waypoints.map((e) => e.latitude);
-    final lngs = _detail.waypoints.map((e) => e.longitude);
+  LatLngBounds _getBounds(List<LatLng> waypoints) {
+    final lats = waypoints.map((e) => e.latitude);
+    final lngs = waypoints.map((e) => e.longitude);
     return LatLngBounds(
       southwest: LatLng(lats.reduce((a, b) => a < b ? a : b), lngs.reduce((a, b) => a < b ? a : b)),
       northeast: LatLng(lats.reduce((a, b) => a > b ? a : b), lngs.reduce((a, b) => a > b ? a : b)),
     );
   }
 
-  void _fitBounds() {
-    if (_detail.waypoints.length < 2) return;
-    _mapController?.animateCamera(CameraUpdate.newLatLngBounds(_getBounds(), 60));
+  void _fitBounds(List<LatLng> waypoints) {
+    if (waypoints.length < 2) return;
+    _mapController?.animateCamera(CameraUpdate.newLatLngBounds(_getBounds(waypoints), 60));
   }
-
-  String _formatTime(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
-
-  String _formatDate(DateTime dt) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
-  }
-
-  // ─── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: AppDecorations.mainGradientBackground,
-        child: SafeArea(
-          child: Column(
-            children: [
-              _appBar(),
-              const SizedBox(height: 4),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: context.borderRadius20pt,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    decoration: BoxDecoration(color: cardBg, borderRadius: context.borderRadius20pt),
-                    child: Column(
-                      children: [
-                        Expanded(child: _buildMap()),
-                        _buildBottomSheet(),
-                      ],
+    return BlocConsumer<LocationTrackerBloc, LocationTrackerState>(
+      listenWhen: (prev, curr) => prev.stateTrackedLocationHistoryDetail != curr.stateTrackedLocationHistoryDetail,
+      listener: (context, state) {
+        if (state.stateTrackedLocationHistoryDetail == RequestStatus.success) {
+          setState(() {
+            _mapData(state.trackedLocationHistoryDetail);
+          });
+        } else if (state.stateTrackedLocationHistoryDetail == RequestStatus.error) {}
+      },
+      builder: (context, state) {
+        final data = widget.trackedLocationData;
+        final start = DateTime.parse(data.startedTime);
+        final end = data.stoppedTime != null ? DateTime.parse(data.stoppedTime!) : null;
+        final details = state.trackedLocationHistoryDetail;
+        final lastAccuracy = details.isNotEmpty ? details.last.accuracy : null;
+        final isLoading = state.stateTrackedLocationHistoryDetail == RequestStatus.loading;
+
+        return Scaffold(
+          body: Container(
+            decoration: AppDecorations.mainGradientBackground,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _appBar(data),
+                  context.vWhitespace(4),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: context.borderRadius20pt,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        decoration: BoxDecoration(color: ColorName.grey, borderRadius: context.borderRadius20pt),
+                        child: isLoading
+                            ? Center(child: CircularProgressIndicator(color: ColorName.primary))
+                            : Column(
+                                children: [
+                                  Expanded(child: _map(details)),
+                                  _informationBottomSheet(data: data, start: start, end: end, accuracy: lastAccuracy),
+                                ],
+                              ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  // ─── App Bar ───────────────────────────────────────────────────────────────
-
-  Widget _appBar() {
+  Widget _appBar(TrackedLocationDataModel data) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -201,35 +147,34 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
             child: Container(
               width: 36,
               height: 36,
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), shape: BoxShape.circle),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
+              decoration: BoxDecoration(color: ColorName.white.withValues(alpha: 0.15), shape: BoxShape.circle),
+              child: const Icon(Icons.arrow_back, color: ColorName.white, size: 18),
             ),
           ),
           Expanded(
             child: Text(
-              _detail.title,
+              context.l10n.trackedLocTitle(data.id.toString()),
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+              style: TextStyle(color: ColorName.white, fontSize: 16, fontWeight: FontWeight.w800),
             ),
           ),
-          context.hWhitespace(36),
+          context.hWhitespace(16),
         ],
       ),
     );
   }
 
-  // ─── Map ───────────────────────────────────────────────────────────────────
+  Widget _map(List<TrackedLocationDataDetailModel> details) {
+    final initialTarget = details.isNotEmpty
+        ? LatLng(details.first.latitude, details.first.longitude)
+        : const LatLng(-6.2695696, 106.8293371);
 
-  Widget _buildMap() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: context.radius20pt),
       child: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _detail.waypoints.isNotEmpty ? _detail.waypoints.first : const LatLng(-6.2, 106.8),
-              zoom: 15,
-            ),
+            initialCameraPosition: CameraPosition(target: initialTarget, zoom: 15),
             markers: _markers,
             polylines: _polylines,
             myLocationButtonEnabled: false,
@@ -237,23 +182,29 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
             mapToolbarEnabled: false,
             onMapCreated: (controller) {
               _mapController = controller;
-              WidgetsBinding.instance.addPostFrameCallback((_) => _fitBounds());
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final waypoints = details.map((e) => LatLng(e.latitude, e.longitude)).toList();
+                _fitBounds(waypoints);
+              });
             },
           ),
           Positioned(
             bottom: 12,
             right: 12,
             child: GestureDetector(
-              onTap: _fitBounds,
+              onTap: () {
+                final waypoints = details.map((e) => LatLng(e.latitude, e.longitude)).toList();
+                _fitBounds(waypoints);
+              },
               child: Container(
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ColorName.white,
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 6)],
+                  boxShadow: [BoxShadow(color: ColorName.black.withValues(alpha: 0.08), blurRadius: 6)],
                 ),
-                child: const Icon(Icons.my_location, color: primary, size: 18),
+                child: const Icon(Icons.my_location, color: ColorName.primary, size: 18),
               ),
             ),
           ),
@@ -264,31 +215,32 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
   }
 
   Widget _buildMapLegend() {
+    final l10n = context.l10n;
     return Positioned(
       top: 12,
       left: 12,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 6)],
+          color: ColorName.white,
+          borderRadius: context.borderRadius28pt,
+          boxShadow: [BoxShadow(color: ColorName.black.withValues(alpha: 0.08), blurRadius: 6)],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _legendDot(const Color(0xFF08a85a)),
-            const SizedBox(width: 4),
-            const Text(
-              'Start',
-              style: TextStyle(fontSize: 11, color: darkBlue, fontWeight: FontWeight.w600),
+            _legendDot(ColorName.green),
+            context.hWhitespace(4),
+            Text(
+              l10n.startLabel,
+              style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(width: 10),
-            _legendDot(const Color(0xFFe03030)),
-            const SizedBox(width: 4),
-            const Text(
-              'End',
-              style: TextStyle(fontSize: 11, color: darkBlue, fontWeight: FontWeight.w600),
+            context.hWhitespace(10),
+            _legendDot(ColorName.coralRed),
+            context.hWhitespace(4),
+            Text(
+              l10n.endLabel,
+              style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -304,47 +256,40 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
     );
   }
 
-  // ─── Bottom Sheet ──────────────────────────────────────────────────────────
-
-  Widget _buildBottomSheet() {
+  Widget _informationBottomSheet({
+    required TrackedLocationDataModel data,
+    required DateTime start,
+    required DateTime? end,
+    required String? accuracy,
+  }) {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: ColorName.white,
+        borderRadius: BorderRadius.vertical(bottom: context.radius20pt),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _detail.title,
-                      style: const TextStyle(color: darkBlue, fontSize: 14, fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${_formatDate(_detail.startTime)}  ·  ${_formatTime(_detail.startTime)} — ${_formatTime(_detail.endTime)}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Text(
+            l10n.trackedLocTitle(data.id.toString()),
+            style: TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: 14),
+          context.vWhitespace(2),
+          Text(
+            end != null
+                ? '${TimeHelper().formatDate(start.toString())}  ·  ${TimeHelper().formatTime(start)} — ${TimeHelper().formatTime(end)}'
+                : '${TimeHelper().formatDate(start.toString())}  ·  ${TimeHelper().formatTime(start)} — ongoing',
+            style: TextStyle(color: ColorName.darkGrey, fontSize: 10),
+          ),
+          context.vWhitespace(14),
           Row(
             children: [
-              _buildStatItem(Icons.location_on_outlined, '${_detail.waypoints.length}', 'waypoints'),
-              _buildStatDivider(),
-              _buildStatItem(Icons.timer_outlined, _detail.duration, 'duration'),
-              _buildStatDivider(),
-              _buildStatItem(Icons.route_outlined, '${_detail.distanceKm.toStringAsFixed(1)} km', 'distance'),
+              _statItem(Icons.timer_outlined, TimeHelper().duration(data.duration), l10n.durationLabel),
+              Container(width: 1, height: 36, color: ColorName.divGrey),
+              _statItem(Icons.gps_fixed_sharp, accuracy.capitalizeWords() ?? '-', l10n.accuracyLabel),
             ],
           ),
         ],
@@ -352,23 +297,19 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
     );
   }
 
-  Widget _buildStatItem(IconData icon, String value, String label) {
+  Widget _statItem(IconData icon, String value, String label) {
     return Expanded(
       child: Column(
         children: [
-          Icon(icon, color: primary, size: 16),
-          const SizedBox(height: 4),
+          Icon(icon, color: ColorName.primary, size: 16),
+          context.vWhitespace(4),
           Text(
             value,
-            style: const TextStyle(color: darkBlue, fontSize: 13, fontWeight: FontWeight.w800),
+            style: const TextStyle(color: ColorName.black, fontSize: 12, fontWeight: FontWeight.w800),
           ),
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+          Text(label, style: TextStyle(color: ColorName.darkGrey, fontSize: 10)),
         ],
       ),
     );
-  }
-
-  Widget _buildStatDivider() {
-    return Container(width: 0.5, height: 36, color: const Color(0xFFEEEEEE));
   }
 }

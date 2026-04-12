@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gps_location_tracker_sentinel_tech/l10n/app_localizations.dart';
 
-import 'core/config/app_router.dart';
+import 'core/core.dart';
 import 'features/location-tracker/core/core.dart';
 import 'features/setting/core/core.dart';
 
@@ -21,18 +21,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final _appRouter = AppRouter();
   late final GoRouter _router;
-  //late LocationTrackerBloc _locationTrackerBloc;
 
   @override
   void initState() {
     super.initState();
 
-    //initManagers();
     _router = _appRouter.router;
-  }
-
-  void initManagers() {
-    //_locationTrackerBloc = LocationTrackerBloc();
   }
 
   @override

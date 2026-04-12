@@ -10,7 +10,7 @@ class LocationTrackerDependency {
 
   static void init() {
     /// [STATE_MANAGEMENT]
-    locator.registerFactory(() => LocationTrackerBloc(locator(), locator()));
+    locator.registerLazySingleton(() => LocationTrackerBloc(locator(), locator()));
 
     /// [REPOSITORY]
     locator.registerLazySingleton<LocationTrackerRepository>(() => LocationTrackerRepositoryImpl());

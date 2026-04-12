@@ -47,5 +47,18 @@
 	<true/>
 	<key>MAPS_API_KEY</key>
     <string>$(MAPS_API_KEY)</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>fetch</string>
+        <string>processing</string>
+    </array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app uses your location to track and display your current position on the map.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app continuously tracks your location in the background to ensure accurate and uninterrupted GPS monitoring.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>This app requires always-on location access to monitor and record your GPS position even when the app is not in use.</string>
+
 </dict>
 </plist>

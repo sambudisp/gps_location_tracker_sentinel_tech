@@ -16,51 +16,51 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     on<_UpdateGpsTrackingInterval>((event, emit) async {
       final result = await repo.updateGpsTrackingInterval(interval: event.interval);
       result.match(
-        (err) => emit(state.copyWith(intervalState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(intervalState: DbStatus.success, interval: event.interval)),
+        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(intervalState: RequestStatus.success, interval: event.interval)),
       );
     });
 
     on<_GetGpsTrackingInterval>((event, emit) async {
-      emit(state.copyWith(intervalState: DbStatus.loading));
+      emit(state.copyWith(intervalState: RequestStatus.loading));
       final result = await repo.getGpsTrackingInterval();
       result.match(
-        (err) => emit(state.copyWith(intervalState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(intervalState: DbStatus.success, interval: data)),
+        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(intervalState: RequestStatus.success, interval: data)),
       );
     });
 
     on<_UpdateGpsAccuracy>((event, emit) async {
       final result = await repo.updateGpsAccuracy(accuracy: event.interval);
       result.match(
-        (err) => emit(state.copyWith(accuracyState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(accuracyState: DbStatus.success, accuracy: event.interval)),
+        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(accuracyState: RequestStatus.success, accuracy: event.interval)),
       );
     });
 
     on<_GetGpsAccuracy>((event, emit) async {
-      emit(state.copyWith(accuracyState: DbStatus.loading));
+      emit(state.copyWith(accuracyState: RequestStatus.loading));
       final result = await repo.getGpsAccuracy();
       result.match(
-        (err) => emit(state.copyWith(accuracyState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(accuracyState: DbStatus.success, accuracy: data)),
+        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(accuracyState: RequestStatus.success, accuracy: data)),
       );
     });
 
     on<_UpdateKeepScreenOn>((event, emit) async {
       final result = await repo.updateKeepScreenOn(isKeepScreenOn: event.isKeepScreenOn);
       result.match(
-        (err) => emit(state.copyWith(keepScreenOnState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(keepScreenOnState: DbStatus.success, isKeepScreenOn: event.isKeepScreenOn)),
+        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(keepScreenOnState: RequestStatus.success, isKeepScreenOn: event.isKeepScreenOn)),
       );
     });
 
     on<_IsKeepScreenOn>((event, emit) async {
-      emit(state.copyWith(keepScreenOnState: DbStatus.loading));
+      emit(state.copyWith(keepScreenOnState: RequestStatus.loading));
       final result = await repo.isKeepScreenOn();
       result.match(
-        (err) => emit(state.copyWith(keepScreenOnState: DbStatus.error, errorMessage: err.message)),
-        (data) => emit(state.copyWith(keepScreenOnState: DbStatus.success, isKeepScreenOn: data)),
+        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorMessage: err.message)),
+        (data) => emit(state.copyWith(keepScreenOnState: RequestStatus.success, isKeepScreenOn: data)),
       );
     });
   }

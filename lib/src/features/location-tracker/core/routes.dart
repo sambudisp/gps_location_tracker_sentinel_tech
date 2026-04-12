@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/data/data.dart';
 
 import '../pages/pages.dart';
 
@@ -25,7 +26,8 @@ class LocationTrackerRouter {
           name: locationHistoryDetail,
           path: locationHistoryDetailPath,
           builder: (context, state) {
-            return const LocationHistoryDetailPage();
+            final data = state.extra as TrackedLocationDataModel;
+            return LocationHistoryDetailPage(trackedLocationData: data);
           },
         ),
       ],

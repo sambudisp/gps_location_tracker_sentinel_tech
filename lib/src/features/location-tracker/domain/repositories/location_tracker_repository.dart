@@ -12,4 +12,11 @@ abstract class LocationTrackerRepository {
   });
 
   Future<Either<Failure, void>> inputTrackedLocationDataDetail(TrackedLocationDataDetailModel data);
+  Future<Either<Failure, List<TrackedLocationDataModel>>> getTrackedLocationHistory();
+  Future<Either<Failure, List<TrackedLocationDataDetailModel>>> getTrackedLocationHistoryDetail({
+    required int? parentId,
+  });
+  Future<Either<Failure, bool>> deleteTrackedLocationHistory({required int? id});
+  Future<Either<Failure, bool>> deleteAllTrackedLocationHistory();
+  Future<Either<Failure, TrackedLocationDataModel?>> getActiveTracking();
 }

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/setting/managers/bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../assets/colors.gen.dart';
 import '../../../core/core.dart';
+import '../../location-tracker/managers/bloc.dart';
 import '../data/data.dart';
 
 extension TrackingIntervalLabel on GpsTrackingInterval {
@@ -48,10 +50,20 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  String _appVersion = '';
+  bool _isPageReady = false;
+
   @override
   void initState() {
     super.initState();
-    context.read<SettingBloc>().add(SettingEvent.getGpsTrackingInterval());
+    _getAppVersion();
+  }
+
+  Future<void> _getAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = '${info.version} (${info.buildNumber})';
+    });
   }
 
   @override
@@ -62,20 +74,14 @@ class _SettingPageState extends State<SettingPage> {
         ..add(SettingEvent.getGpsAccuracy())
         ..add(SettingEvent.isKeepScreenOn()),
       child: BlocConsumer<SettingBloc, SettingState>(
-        listener: (context, state) {
-          switch (state.intervalState) {
-            case DbStatus.success:
-              break;
-
-            case DbStatus.error:
-              break;
-            default:
-              break;
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           final interval = state.interval ?? GpsTrackingInterval.s10;
           final accuracy = state.accuracy ?? GpsAccuracy.medium;
+          final l10n = context.l10n;
+          final isTracking =
+              locator<LocationTrackerBloc>().state.activeTrackingId != null &&
+              locator<LocationTrackerBloc>().state.activeTrackingId != 0;
 
           return Scaffold(
             body: Container(
@@ -84,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: Column(
                   children: [
                     _appBar(),
-                    const SizedBox(height: 4),
+                    context.vWhitespace(4),
                     Expanded(
                       child: ClipRRect(
                         borderRadius: context.borderRadius20pt,
@@ -94,48 +100,62 @@ class _SettingPageState extends State<SettingPage> {
                           child: ListView(
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                             children: [
-                              _sectionLabel('Tracking'),
+                              isTracking
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(left: 4, bottom: 8),
+                                      child: Text(
+                                        l10n.settingTrackingWarningDesc,
+                                        style: TextStyle(
+                                          color: ColorName.coralRed.withValues(alpha: 0.8),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              _sectionLabel(l10n.trackingLabel),
                               _chipCard<GpsTrackingInterval>(
                                 icon: Icons.timer_outlined,
-                                title: 'Interval',
-                                subtitle: 'How often location is recorded',
+                                title: l10n.intervalLabel,
+                                subtitle: l10n.intervalDesc,
                                 values: GpsTrackingInterval.values,
                                 selected: interval,
                                 labelOf: (v) => v.label,
                                 onChanged: (v) => setState(() {
                                   context.read<SettingBloc>().add(SettingEvent.updateGpsTrackingInterval(interval: v));
                                 }),
-                                isLoading: state.intervalState == DbStatus.loading,
+                                isLoading: state.intervalState == RequestStatus.loading,
                               ),
-                              const SizedBox(height: 10),
+                              context.vWhitespace(10),
                               _chipCard<GpsAccuracy>(
                                 icon: Icons.gps_fixed,
-                                title: 'GPS accuracy',
-                                subtitle: 'Higher accuracy uses more battery',
+                                title: l10n.gpsAccuracyLabel,
+                                subtitle: l10n.gpsAccuracyDesc,
                                 values: GpsAccuracy.values,
                                 selected: accuracy,
                                 labelOf: (v) => v.label,
                                 onChanged: (v) => setState(() {
                                   context.read<SettingBloc>().add(SettingEvent.updateGpsAccuracy(interval: v));
                                 }),
-                                isLoading: state.accuracyState == DbStatus.loading,
+                                isLoading: state.accuracyState == RequestStatus.loading,
                               ),
-                              const SizedBox(height: 16),
-                              _sectionLabel('Behaviour'),
+                              context.vWhitespace(16),
+                              _sectionLabel(l10n.behaviourLabel),
                               _toggleCard(
                                 icon: Icons.screen_lock_portrait_outlined,
-                                title: 'Keep screen on',
-                                subtitle: 'Prevent screen from turning off while tracking',
+                                title: l10n.keepScreenOnLabel,
+                                subtitle: l10n.keepScreenOnDesc,
                                 value: state.isKeepScreenOn,
-                                isLoading: state.keepScreenOnState == DbStatus.loading,
+                                isLoading: state.keepScreenOnState == RequestStatus.loading,
                                 onChanged: (v) {
                                   context.read<SettingBloc>().add(SettingEvent.updateKeepScreenOn(isKeepScreenOn: v));
                                 },
                               ),
-                              const SizedBox(height: 16),
-                              _sectionLabel('About'),
-                              _infoCard(icon: Icons.info_outline, title: 'App version', trailing: '1.0.0'),
-                              const SizedBox(height: 10),
+                              context.vWhitespace(16),
+                              _sectionLabel(l10n.aboutLabel),
+                              _infoCard(icon: Icons.info_outline, title: l10n.appVersionLabel, trailing: _appVersion),
+                              context.vWhitespace(10),
                             ],
                           ),
                         ),
@@ -183,7 +203,7 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.only(left: 4, bottom: 8),
       child: Text(
         label.toUpperCase(),
-        style: const TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2),
+        style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2),
       ),
     );
   }
@@ -207,22 +227,22 @@ class _SettingPageState extends State<SettingPage> {
           Row(
             children: [
               Icon(icon, color: ColorName.primary, size: 18),
-              const SizedBox(width: 8),
+              context.hWhitespace(8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(color: ColorName.black, fontSize: 13, fontWeight: FontWeight.w700),
+                      style: const TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w700),
                     ),
-                    Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                    Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12)),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          context.vWhitespace(12),
           isLoading
               ? _chipShimmer()
               : Wrap(
@@ -290,20 +310,20 @@ class _SettingPageState extends State<SettingPage> {
           : Row(
               children: [
                 Icon(icon, color: ColorName.primary, size: 18),
-                const SizedBox(width: 10),
+                context.hWhitespace(10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(color: ColorName.darkBlue, fontSize: 13, fontWeight: FontWeight.w700),
+                        style: const TextStyle(color: ColorName.darkBlue, fontSize: 14, fontWeight: FontWeight.w700),
                       ),
-                      Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 11, height: 1.4)),
+                      Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12, height: 1.4)),
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),
+                context.hWhitespace(10),
                 Switch(
                   value: value,
                   onChanged: onChanged,
@@ -329,7 +349,7 @@ class _SettingPageState extends State<SettingPage> {
             height: 18,
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
           ),
-          const SizedBox(width: 10),
+          context.hWhitespace(10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +359,7 @@ class _SettingPageState extends State<SettingPage> {
                   height: 12,
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
                 ),
-                const SizedBox(height: 6),
+                context.vWhitespace(6),
                 Container(
                   width: 160,
                   height: 10,
@@ -348,7 +368,7 @@ class _SettingPageState extends State<SettingPage> {
               ],
             ),
           ),
-          const SizedBox(width: 10),
+          context.hWhitespace(10),
           Container(
             width: 44,
             height: 24,
@@ -366,11 +386,11 @@ class _SettingPageState extends State<SettingPage> {
       child: Row(
         children: [
           Icon(icon, color: ColorName.primary, size: 18),
-          const SizedBox(width: 10),
+          context.hWhitespace(10),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(color: ColorName.darkBlue, fontSize: 13, fontWeight: FontWeight.w700),
+              style: const TextStyle(color: ColorName.darkBlue, fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
           Text(trailing, style: const TextStyle(color: Colors.grey, fontSize: 12)),

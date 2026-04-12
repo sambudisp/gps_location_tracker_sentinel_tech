@@ -13,23 +13,11 @@ enum DialogStyle {
   Widget icon(BuildContext context) {
     switch (this) {
       case DialogStyle.succeed:
-        return Assets.icons.icSucceed.svg(
-          width: context.dimens80pt,
-          height: context.dimens80pt,
-          colorFilter: ColorFilter.mode(ColorName.green, BlendMode.srcIn),
-        );
+        return Assets.icons.icSucceed.svg(width: context.dimens80pt, height: context.dimens80pt);
       case DialogStyle.info:
-        return Assets.icons.icInfo.svg(
-          width: context.dimens80pt,
-          height: context.dimens80pt,
-          colorFilter: ColorFilter.mode(ColorName.primary, BlendMode.srcIn),
-        );
+        return Assets.icons.icInfo.svg(width: context.dimens80pt, height: context.dimens80pt);
       case DialogStyle.error:
-        return Assets.icons.icError.svg(
-          width: context.dimens80pt,
-          height: context.dimens80pt,
-          colorFilter: ColorFilter.mode(ColorName.red, BlendMode.srcIn),
-        );
+        return Assets.icons.icError.svg(width: context.dimens80pt, height: context.dimens80pt);
     }
   }
 
@@ -37,9 +25,8 @@ enum DialogStyle {
     switch (this) {
       case DialogStyle.info:
       case DialogStyle.succeed:
-        return Colors.black;
       case DialogStyle.error:
-        return Colors.red.shade600;
+        return Colors.black;
     }
   }
 }

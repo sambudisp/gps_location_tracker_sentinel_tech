@@ -34,4 +34,42 @@ class LocationTrackerRepositoryImpl implements LocationTrackerRepository {
     int result = await _datasources.insertTrackedLocationDataDetail(data);
     return (result != -1) ? Either.right(result) : Either.left(DatabaseFailure('Error Insert'));
   }
+
+  @override
+  Future<Either<Failure, List<TrackedLocationDataModel>>> getTrackedLocationHistory() async {
+    List<TrackedLocationDataModel> result = await _datasources.getTrackedLocationHistory();
+    return (result.isNotEmpty) ? Either.right(result) : Either.left(DatabaseFailure('Error Get'));
+  }
+
+  @override
+  Future<Either<Failure, List<TrackedLocationDataDetailModel>>> getTrackedLocationHistoryDetail({
+    required int? parentId,
+  }) async {
+    List<TrackedLocationDataDetailModel> result = await _datasources.getTrackedLocationHistoryDetail(
+      parentId: parentId,
+    );
+    return (result.isNotEmpty) ? Either.right(result) : Either.left(DatabaseFailure('Error Get Detail'));
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteTrackedLocationHistory({required int? id}) async {
+    bool result = await _datasources.deleteTrackedLocationHistory(id: id);
+    return result ? Either.right(true) : Either.left(DatabaseFailure('Failed to delete'));
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteAllTrackedLocationHistory() async {
+    bool result = await _datasources.deleteAllTrackedLocationHistory();
+    return result ? Either.right(true) : Either.left(DatabaseFailure('Failed to delete'));
+  }
+
+  @override
+  Future<Either<Failure, TrackedLocationDataModel?>> getActiveTracking() async {
+    try {
+      final result = await _datasources.getActiveTracking();
+      return Right(result);
+    } catch (e) {
+      return Left(DatabaseFailure('Failed to get active tracking'));
+    }
+  }
 }

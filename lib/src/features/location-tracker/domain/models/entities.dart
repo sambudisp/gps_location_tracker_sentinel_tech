@@ -1,1 +1,1 @@
-//export 'app_update_model.dart';
+//export 'model.dart';

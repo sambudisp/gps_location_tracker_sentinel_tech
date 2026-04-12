@@ -20,6 +20,22 @@ enum GpsTrackingInterval {
   }
 }
 
+extension GpsTrackingIntervalX on GpsTrackingInterval {
+  Duration toIntervalDuration() {
+    switch (this) {
+      case GpsTrackingInterval.s5:
+        return const Duration(seconds: 5);
+      case GpsTrackingInterval.s10:
+        return const Duration(seconds: 10);
+      case GpsTrackingInterval.s30:
+        return const Duration(seconds: 30);
+      case GpsTrackingInterval.m1:
+        return const Duration(minutes: 1);
+    }
+  }
+}
+
+///
 enum GpsAccuracy { lowest, low, medium, high, best }
 
 extension GpsAccuracyX on String {

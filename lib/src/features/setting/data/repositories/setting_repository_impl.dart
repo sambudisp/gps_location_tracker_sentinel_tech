@@ -65,10 +65,7 @@ class SettingRepositoryImpl implements SettingRepository {
   Future<Either<Failure, bool>> isKeepScreenOn() async {
     try {
       final result = await _datasources.isKeepScreenOn();
-      if (result == null) {
-        return Left(SharedPreferenceFailure('null'));
-      }
-      return Right(result);
+      return Right(result ?? false);
     } catch (e) {
       return Left(SharedPreferenceFailure('error'));
     }

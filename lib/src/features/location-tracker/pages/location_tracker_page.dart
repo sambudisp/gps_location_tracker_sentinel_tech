@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,11 +7,16 @@ import 'package:go_router/go_router.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/setting/core/core.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../assets/colors.gen.dart';
 import '../../../components/components.dart';
 import '../../../core/core.dart';
+import '../../setting/domain/domain.dart';
 import '../core/core.dart';
+import '../core/enums/location_status.dart';
+import '../core/helpers/location_permission_helper.dart';
 import '../managers/bloc.dart';
 
 class LocationTrackerPage extends StatefulWidget {
@@ -20,19 +27,38 @@ class LocationTrackerPage extends StatefulWidget {
 }
 
 class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTickerProviderStateMixin {
+  // Animation
   late final AnimationController _animationController;
   bool isAnimationPlaying = false;
+
+  // Bloc
   late final LocationTrackerBloc locationTrackerBloc;
+
+  // Duration Timer
+  Timer? _durationTimer;
+  Duration _elapsed = Duration.zero;
+
+  // Track
+  bool _hasTracked = false;
+
+  // Setting
+  late final SettingRepository _settingRepository = locator<SettingRepository>();
 
   @override
   void initState() {
     super.initState();
     locationTrackerBloc = locator<LocationTrackerBloc>();
     _animationController = AnimationController(vsync: this);
+    _isKeepScreenOn(isAppRestarted: true);
+
+    // Restore Tracking
+    locationTrackerBloc.add(const LocationTrackerEvent.restoreLocationTracking());
   }
 
   @override
   void dispose() {
+    WakelockPlus.disable();
+    _durationTimer?.cancel();
     _animationController.dispose();
     super.dispose();
   }
@@ -41,14 +67,34 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
   Widget build(BuildContext context) {
     return BlocListener<LocationTrackerBloc, LocationTrackerState>(
       listener: (context, state) {
-        if (state.stateLocationTracking == DbStatus.error) {
+        if (state.stateLocationTracking == RequestStatus.restored) {
+          // Calculate duration
+          final startedTime = DateTime.parse(state.activeTrackingStartedTime!);
+          final elapsed = DateTime.now().difference(startedTime);
+
+          _animationController.repeat();
+          setState(() {
+            _elapsed = elapsed;
+            isAnimationPlaying = true;
+          });
+          _startDurationTimer();
+          _isKeepScreenOn();
+        }
+
+        if (state.stateLocationTracking == RequestStatus.error) {
           setState(() {
             _animationController.stop();
             isAnimationPlaying = false;
           });
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage ?? 'Terjadi kesalahan')));
+          showDialog(
+            context: context,
+            builder: (context) => CustomDialog.error(title: state.errorMessage),
+          );
+        } else if (_hasTracked && state.stateLocationTracking == RequestStatus.idle && state.activeTrackingId == null) {
+          _hasTracked = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.locationTrackingSavedMessage), behavior: SnackBarBehavior.floating),
+          );
         }
       },
       child: Scaffold(
@@ -131,36 +177,47 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
   }
 
   Widget _locationTrackingCard() {
+    final l10n = context.l10n;
     return Expanded(
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 40),
-        decoration: BoxDecoration(color: ColorName.white, borderRadius: context.borderRadius28pt),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
+        buildWhen: (prev, curr) => prev.activeTrackingId != curr.activeTrackingId,
+        builder: (context, state) {
+          final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
+          final instructionLabel = isTracking
+              ? l10n.locationTrackingActiveLabel
+              : l10n.locationTrackingInstructionLabel;
+
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 40),
+            decoration: BoxDecoration(color: ColorName.white, borderRadius: context.borderRadius28pt),
+            child: Column(
               children: [
-                Text(
-                  context.l10n.durationLabel,
-                  style: TextStyle(color: Colors.grey.shade400, fontSize: 22, fontWeight: FontWeight.w500),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.l10n.durationLabel,
+                      style: TextStyle(color: Colors.grey.shade400, fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      _formattedDuration,
+                      style: TextStyle(color: ColorName.primary, fontSize: 22, fontWeight: FontWeight.w800),
+                    ),
+                  ],
                 ),
+                const Spacer(),
+                _animationBackground(),
+                const Spacer(),
                 Text(
-                  '00:00:59',
-                  style: TextStyle(color: ColorName.primary, fontSize: 22, fontWeight: FontWeight.w800),
+                  instructionLabel,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: ColorName.black, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
-            const Spacer(),
-            _animationBackground(),
-            const Spacer(),
-            Text(
-              context.l10n.locationTrackingInstructionLabel,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: ColorName.black, fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -192,7 +249,7 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
         decoration: BoxDecoration(color: ColorName.primaryAlt, borderRadius: context.borderRadius100pt),
         child: Center(
           child: Text(
-            context.l10n.locationHistoryLabel,
+            context.l10n.locationHistoryLabel.toUpperCase(),
             style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 1.2),
           ),
         ),
@@ -201,19 +258,36 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
   }
 
   Widget _takeNowButton() {
-    return InkWell(
-      onTap: _onToggleAnimation,
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(color: ColorName.yellow, borderRadius: context.borderRadius100pt),
-        child: Center(
-          child: Text(
-            context.l10n.trackNowLabel,
-            style: TextStyle(color: Color(0xFF5A3A00), fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 1.5),
+    final l10n = context.l10n;
+    return BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
+      buildWhen: (prev, curr) => prev.activeTrackingId != curr.activeTrackingId,
+      builder: (context, state) {
+        final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
+        final buttonTrackLabel = isTracking ? l10n.stopTrackLabel : l10n.trackNowLabel;
+
+        return InkWell(
+          onTap: _onToggleAnimation,
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+              color: isTracking ? ColorName.coralRed : ColorName.yellow,
+              borderRadius: context.borderRadius100pt,
+            ),
+            child: Center(
+              child: Text(
+                buttonTrackLabel.toUpperCase(),
+                style: TextStyle(
+                  color: isTracking ? ColorName.white : ColorName.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -221,7 +295,7 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
     if (_animationController.isAnimating) {
       showDialog(
         context: context,
-        builder: (context) => CustomDialog.info(
+        builder: (context) => CustomDialog.error(
           twoButtonVariants: true,
           title: context.l10n.locationTrackingStopConfirmation,
           onPositiveTap: () {
@@ -235,44 +309,113 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
       );
     } else {
       _startTracking();
-      setState(() {
-        _animationController.repeat();
-        isAnimationPlaying = true;
-      });
     }
   }
 
+  void _startDurationTimer() {
+    _durationTimer?.cancel();
+    _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        _elapsed += const Duration(seconds: 1);
+      });
+    });
+  }
+
+  String get _formattedDuration {
+    final hours = _elapsed.inHours.toString().padLeft(2, '0');
+    final minutes = (_elapsed.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (_elapsed.inSeconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
+  }
+
+  Future<void> _isKeepScreenOn({bool isAppRestarted = false}) async {
+    if (isAppRestarted) {
+      final state = locationTrackerBloc.state;
+      final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
+      if (!isTracking) return;
+    }
+
+    final keepScreenOn = await _settingRepository.isKeepScreenOn();
+    keepScreenOn.fold((_) => null, (value) {
+      if (value) WakelockPlus.enable();
+    });
+  }
+
   void _startTracking() async {
-    final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Izin lokasi ditolak')));
-      // stop animasi
+    final notificationPermissionStatus = await Permission.notification.request();
+    if (!mounted) return;
+    if (notificationPermissionStatus.isDenied || notificationPermissionStatus.isPermanentlyDenied) {
+      showDialog(
+        context: context,
+        builder: (context) => CustomDialog.info(
+          twoButtonVariants: true,
+          title: context.l10n.permissionIssueTitle,
+          description: context.l10n.notificationPermissionDeniedDesc,
+          onPositiveTap: () => openAppSettings(),
+        ),
+      );
+      return;
+    }
+
+    final locationPermissionStatus = await LocationPermissionHelper().handleLocationPermission();
+    if (!mounted) return;
+
+    if (locationPermissionStatus != LocationStatus.success) {
+      _showLocationIssueDialog(locationPermissionStatus);
       setState(() {
         _animationController.stop();
         isAnimationPlaying = false;
       });
       return;
     }
+    _hasTracked = true;
+    _startDurationTimer();
+    _isKeepScreenOn();
+
+    setState(() {
+      _animationController.repeat();
+      isAnimationPlaying = true;
+    });
 
     context.read<LocationTrackerBloc>().add(LocationTrackerEvent.startLocationTracking());
   }
 
   void _stopTracking() {
+    WakelockPlus.disable();
+    _durationTimer?.cancel();
+    setState(() {
+      _elapsed = Duration.zero;
+    });
     context.read<LocationTrackerBloc>().add(LocationTrackerEvent.stopLocationTracking());
   }
 
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return false;
+  void _showLocationIssueDialog(LocationStatus status) {
+    final l10n = context.l10n;
+    final bool isServiceDisabled = status == LocationStatus.serviceDisabled;
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return false;
-    }
-
-    if (permission == LocationPermission.deniedForever) return false;
-
-    return true;
+    showDialog(
+      context: context,
+      builder: (context) => CustomDialog.info(
+        twoButtonVariants: true,
+        title: isServiceDisabled ? l10n.gpsNotActiveTitle : l10n.permissionIssueTitle,
+        description: isServiceDisabled
+            ? l10n.gpsNotActiveDesc
+            : status == LocationStatus.permissionDeniedForever
+            ? l10n.permissionDeniedForeverDesc
+            : l10n.permissionDeniedDesc,
+        onPositiveTap: () {
+          if (isServiceDisabled) {
+            Geolocator.openLocationSettings();
+          } else if (status == LocationStatus.permissionDeniedForever) {
+            Geolocator.openAppSettings();
+          }
+          _stopTracking();
+          setState(() {
+            _animationController.stop();
+            isAnimationPlaying = false;
+          });
+        },
+      ),
+    );
   }
 }

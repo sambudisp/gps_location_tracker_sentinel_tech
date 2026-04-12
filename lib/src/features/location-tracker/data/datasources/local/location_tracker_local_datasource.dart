@@ -20,7 +20,7 @@ class LocationTrackerLocalDatasource {
       );
 
       return data.copyWith(id: id);
-    } catch (e, stackTrace) {
+    } catch (e) {
       return null;
     }
   }
@@ -33,7 +33,7 @@ class LocationTrackerLocalDatasource {
           UPDATE tracked_location
           SET stopped_time = ?, duration = ?
           WHERE id = ?
-          ''',
+        ''',
         [stoppedTime, duration, id],
       );
     } catch (e) {
@@ -58,5 +58,79 @@ class LocationTrackerLocalDatasource {
       result = -1;
     }
     return result;
+  }
+
+  Future<List<TrackedLocationDataModel>> getTrackedLocationHistory() async {
+    try {
+      final result = await dbSqfliteHelper.execRawQuery('''
+          SELECT * FROM tracked_location
+          ORDER BY started_time DESC
+        ''');
+      return result.map((e) => TrackedLocationDataModel.fromMap(e)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<TrackedLocationDataDetailModel>> getTrackedLocationHistoryDetail({required int? parentId}) async {
+    try {
+      final result = await dbSqfliteHelper.execRawQuery(
+        '''
+            SELECT * FROM tracked_location_detail
+            WHERE parent_id = ?
+            ORDER BY timestamp ASC
+          ''',
+        [parentId],
+      );
+      return result.map((e) => TrackedLocationDataDetailModel.fromMap(e)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<bool> deleteTrackedLocationHistory({required int? id}) async {
+    try {
+      await dbSqfliteHelper.execRawDelete(
+        '''
+          DELETE FROM tracked_location_detail
+          WHERE parent_id = ?
+        ''',
+        [id],
+      );
+      final result = await dbSqfliteHelper.execRawDelete(
+        '''
+          DELETE FROM tracked_location
+          WHERE id = ?
+        ''',
+        [id],
+      );
+      return result > 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteAllTrackedLocationHistory() async {
+    try {
+      await dbSqfliteHelper.execRawDelete('DELETE FROM tracked_location_detail');
+      final result = await dbSqfliteHelper.execRawDelete('DELETE FROM tracked_location');
+      return result > 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<TrackedLocationDataModel?> getActiveTracking() async {
+    try {
+      final result = await dbSqfliteHelper.execRawQuery('''
+        SELECT * FROM tracked_location
+        WHERE stopped_time IS NULL
+        LIMIT 1
+      ''');
+      if (result.isEmpty) return null;
+      return TrackedLocationDataModel.fromMap(result.first);
+    } catch (e) {
+      return null;
+    }
   }
 }

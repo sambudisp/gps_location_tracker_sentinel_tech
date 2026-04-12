@@ -142,6 +142,12 @@ abstract class AppLocalizations {
   /// **'Track Now'**
   String get trackNowLabel;
 
+  /// No description provided for @stopTrackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Track'**
+  String get stopTrackLabel;
+
   /// No description provided for @locationHistoryLabel.
   ///
   /// In en, this message translates to:
@@ -151,7 +157,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationTrackingActiveLabel.
   ///
   /// In en, this message translates to:
-  /// **'Tracking your location'**
+  /// **'Tracking your location...'**
   String get locationTrackingActiveLabel;
 
   /// No description provided for @locationTrackingInstructionLabel.
@@ -207,6 +213,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Setting'**
   String get settingLabel;
+
+  /// No description provided for @accuracyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get accuracyLabel;
+
+  /// No description provided for @trackedLocTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked Loc {id}'**
+  String trackedLocTitle(Object id);
+
+  /// No description provided for @startLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startLabel;
+
+  /// No description provided for @endLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get endLabel;
+
+  /// No description provided for @ongoingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get ongoingLabel;
+
+  /// No description provided for @todayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayLabel;
+
+  /// No description provided for @yesterdayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayLabel;
+
+  /// No description provided for @deleteTrackedLocationConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure want to delete?'**
+  String get deleteTrackedLocationConfirmationTitle;
+
+  /// No description provided for @deleteTrackedLocationConfirmationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Tracked Loc. \${id}\" will be permanently deleted.'**
+  String deleteTrackedLocationConfirmationBody(Object id);
+
+  /// No description provided for @deleteAllDataConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure want to delete all data?'**
+  String get deleteAllDataConfirmationTitle;
+
+  /// No description provided for @deleteAllDataConfirmationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All location history will be permanently deleted. This action cannot be undone.'**
+  String get deleteAllDataConfirmationBody;
+
+  /// No description provided for @gpsAccuracyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS accuracy'**
+  String get gpsAccuracyLabel;
+
+  /// No description provided for @gpsAccuracyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher accuracy uses more battery'**
+  String get gpsAccuracyDesc;
+
+  /// No description provided for @keepScreenOnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep screen on'**
+  String get keepScreenOnLabel;
+
+  /// No description provided for @keepScreenOnDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent screen from turning off while tracking'**
+  String get keepScreenOnDesc;
+
+  /// No description provided for @aboutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutLabel;
+
+  /// No description provided for @appVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get appVersionLabel;
+
+  /// No description provided for @intervalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval'**
+  String get intervalLabel;
+
+  /// No description provided for @intervalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'How often location is recorded'**
+  String get intervalDesc;
+
+  /// No description provided for @behaviourLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Behaviour'**
+  String get behaviourLabel;
+
+  /// No description provided for @trackingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking'**
+  String get trackingLabel;
+
+  /// No description provided for @gpsNotActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS Not Active'**
+  String get gpsNotActiveTitle;
+
+  /// No description provided for @permissionIssueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Issue'**
+  String get permissionIssueTitle;
+
+  /// No description provided for @gpsNotActiveDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable GPS/Location Service on your device to continue.'**
+  String get gpsNotActiveDesc;
+
+  /// No description provided for @permissionDeniedForeverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission permanently denied. Open Settings to enable it.'**
+  String get permissionDeniedForeverDesc;
+
+  /// No description provided for @permissionDeniedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This app needs location permission to work properly.'**
+  String get permissionDeniedDesc;
+
+  /// No description provided for @notificationPermissionDeniedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission is required to track location in the background. Please enable it in Settings.'**
+  String get notificationPermissionDeniedDesc;
+
+  /// No description provided for @settingTrackingWarningDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'*When tracking is running, any changes to Settings will be applied on the next tracking session.'**
+  String get settingTrackingWarningDesc;
 }
 
 class _AppLocalizationsDelegate
