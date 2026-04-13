@@ -27,9 +27,9 @@
   "todayLabel": "Today",
   "yesterdayLabel": "Yesterday",
   "deleteTrackedLocationConfirmationTitle": "Are you sure want to delete?",
-  "deleteTrackedLocationConfirmationBody": "\"Tracked Loc. ${id}\" will be permanently deleted.",
+  "deleteTrackedLocationConfirmationBody": "\"Tracked Loc. {id}\" will be permanently deleted.",
   "deleteAllDataConfirmationTitle": "Are you sure want to delete all data?",
-  "deleteAllDataConfirmationBody": "All location history will be permanently deleted. This action cannot be undone.",
+  "deleteAllDataConfirmationBody": "All completed location history will be permanently deleted and cannot be undone. Ongoing tracking will remain.",
   "gpsAccuracyLabel": "GPS accuracy",
   "gpsAccuracyDesc": "Higher accuracy uses more battery",
   "keepScreenOnLabel": "Keep screen on",
@@ -46,7 +46,17 @@
   "permissionDeniedForeverDesc": "Location permission permanently denied. Open Settings to enable it.",
   "permissionDeniedDesc": "This app needs location permission to work properly.",
   "notificationPermissionDeniedDesc": "Notification permission is required to track location in the background. Please enable it in Settings.",
-  "settingTrackingWarningDesc": "*When tracking is running, any changes to Settings will be applied on the next tracking session."
+  "settingTrackingWarningDesc": "*When tracking is running, any changes to Settings will be applied on the next tracking session.",
+  "dataDeletedMessage": "Data deleted",
+  "recordsLabel": "Records",
+  "locationTrackingActiveTitle": "Location Tracking Active",
+  "saveFailedMessage": "Failed to save location data",
+  "deleteFailedMessage": "Failed to delete data",
+  "getDataFailedMessage": "Failed to load data",
+  "saveSettingIntervalFailedMessage": "Failed to save GPS Tracking Interval setting",
+  "saveSettingAccuracyFailedMessage": "Failed to save GPS Accuracy setting",
+  "saveSettingKeepScreenOnFailedMessage": "Failed to save Keep Screen On setting",
+  "generalError": "Something went wrong"
 
 
 

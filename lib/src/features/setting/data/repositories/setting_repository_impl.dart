@@ -17,7 +17,7 @@ class SettingRepositoryImpl implements SettingRepository {
       await _datasources.updateGpsTrackingInterval(interval: interval);
       return const Right(null);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.updateSettingIntervalFailed));
     }
   }
 
@@ -27,7 +27,7 @@ class SettingRepositoryImpl implements SettingRepository {
       final result = await _datasources.getGpsTrackingInterval();
       return Right(result);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.getSettingIntervalFailed));
     }
   }
 
@@ -37,7 +37,7 @@ class SettingRepositoryImpl implements SettingRepository {
       await _datasources.updateGpsAccuracy(accuracy: accuracy);
       return const Right(null);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.updateSettingAccuracyFailed));
     }
   }
 
@@ -47,7 +47,7 @@ class SettingRepositoryImpl implements SettingRepository {
       final result = await _datasources.getGpsAccuracy();
       return Right(result);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.getSettingAccuracyFailed));
     }
   }
 
@@ -57,7 +57,7 @@ class SettingRepositoryImpl implements SettingRepository {
       await _datasources.updateKeepScreenOn(isKeepScreenOn: isKeepScreenOn);
       return const Right(null);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.updateSettingKeepScreenOnFailed));
     }
   }
 
@@ -67,7 +67,7 @@ class SettingRepositoryImpl implements SettingRepository {
       final result = await _datasources.isKeepScreenOn();
       return Right(result ?? false);
     } catch (e) {
-      return Left(SharedPreferenceFailure('error'));
+      return Left(SharedPreferenceFailure(ErrorCodes.getSettingKeepScreenOnFailed));
     }
   }
 }

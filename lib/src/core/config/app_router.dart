@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/location-tracker/core/core.dart';
 import '../../features/setting/core/core.dart';
-import '../../features/splash/splash_page.dart';
+import '../../features/splash/pages/splash_page.dart';
 
 class AppRouter {
   late final router = GoRouter(

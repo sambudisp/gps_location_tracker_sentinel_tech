@@ -52,6 +52,7 @@
         <string>location</string>
         <string>fetch</string>
         <string>processing</string>
+        <string>remote-notification</string>
     </array>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>This app uses your location to track and display your current position on the map.</string>
@@ -59,6 +60,7 @@
     <string>This app continuously tracks your location in the background to ensure accurate and uninterrupted GPS monitoring.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>This app requires always-on location access to monitor and record your GPS position even when the app is not in use.</string>
-
+    <key>NSUserNotificationUsageDescription</key>
+    <string>This app needs notification permission to show location tracking status.</string>
 </dict>
 </plist>

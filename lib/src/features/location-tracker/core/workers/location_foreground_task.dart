@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/core/core.dart';
@@ -50,12 +51,12 @@ class LocationForegroundTask extends TaskHandler {
 
       await locator<LocationTrackerRepository>().inputTrackedLocationDataDetail(data);
     } catch (e) {
-      //debugPrint('LocationForegroundTask error: $e');
+      debugPrint('LocationForegroundTask error: $e');
     }
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp) async {
-    //debugPrint('LocationForegroundTask destroyed');
+    debugPrint('LocationForegroundTask destroyed');
   }
 }

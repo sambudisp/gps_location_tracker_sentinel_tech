@@ -2,6 +2,7 @@ import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker
 
 import '../../../core/db/db_sqflite_helper.dart';
 import '../../../core/injection/injector.dart';
+import '../data/data.dart';
 import '../domain/repositories/location_tracker_repository.dart';
 import '../managers/location_tracker_bloc.dart';
 
@@ -13,7 +14,8 @@ class LocationTrackerDependency {
     locator.registerLazySingleton(() => LocationTrackerBloc(locator(), locator()));
 
     /// [REPOSITORY]
-    locator.registerLazySingleton<LocationTrackerRepository>(() => LocationTrackerRepositoryImpl());
+    locator.registerLazySingleton<LocationTrackerRepository>(() => LocationTrackerRepositoryImpl(locator()));
+    locator.registerLazySingleton<LocationTrackerLocalDatasource>(() => LocationTrackerLocalDatasource(locator()));
 
     /// [DATABASE_HELPER]
     locator.registerLazySingleton<DbSqfliteHelper>(() => DbSqfliteHelper());

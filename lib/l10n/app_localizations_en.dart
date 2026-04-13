@@ -99,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String deleteTrackedLocationConfirmationBody(Object id) {
-    return '\"Tracked Loc. \$$id\" will be permanently deleted.';
+    return '\"Tracked Loc. $id\" will be permanently deleted.';
   }
 
   @override
@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllDataConfirmationBody =>
-      'All location history will be permanently deleted. This action cannot be undone.';
+      'All completed location history will be permanently deleted and cannot be undone. Ongoing tracking will remain.';
 
   @override
   String get gpsAccuracyLabel => 'GPS accuracy';
@@ -166,4 +166,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingTrackingWarningDesc =>
       '*When tracking is running, any changes to Settings will be applied on the next tracking session.';
+
+  @override
+  String get dataDeletedMessage => 'Data deleted';
+
+  @override
+  String get recordsLabel => 'Records';
+
+  @override
+  String get locationTrackingActiveTitle => 'Location Tracking Active';
+
+  @override
+  String get saveFailedMessage => 'Failed to save location data';
+
+  @override
+  String get deleteFailedMessage => 'Failed to delete data';
+
+  @override
+  String get getDataFailedMessage => 'Failed to load data';
+
+  @override
+  String get saveSettingIntervalFailedMessage =>
+      'Failed to save GPS Tracking Interval setting';
+
+  @override
+  String get saveSettingAccuracyFailedMessage =>
+      'Failed to save GPS Accuracy setting';
+
+  @override
+  String get saveSettingKeepScreenOnFailedMessage =>
+      'Failed to save Keep Screen On setting';
+
+  @override
+  String get generalError => 'Something went wrong';
 }

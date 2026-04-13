@@ -1,18 +1,19 @@
 import 'package:equatable/equatable.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/core/enums/error_codes.dart';
 
 abstract class Failure extends Equatable {
-  final String message;
+  final ErrorCodes errorCode;
 
-  const Failure(this.message);
+  const Failure(this.errorCode);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [errorCode];
 }
 
 class DatabaseFailure extends Failure {
-  const DatabaseFailure([String? message]) : super(message ?? '');
+  const DatabaseFailure([ErrorCodes? message]) : super(message ?? ErrorCodes.generalError);
 }
 
 class SharedPreferenceFailure extends Failure {
-  const SharedPreferenceFailure([String? message]) : super(message ?? '');
+  const SharedPreferenceFailure([ErrorCodes? message]) : super(message ?? ErrorCodes.generalError);
 }

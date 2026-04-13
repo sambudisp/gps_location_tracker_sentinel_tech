@@ -498,7 +498,7 @@ String toString() {
 /// @nodoc
 mixin _$SettingState {
 
- RequestStatus get intervalState; RequestStatus get accuracyState; RequestStatus get keepScreenOnState; String get errorMessage; GpsTrackingInterval? get interval; GpsAccuracy? get accuracy; bool get isKeepScreenOn;
+ RequestStatus get intervalState; RequestStatus get accuracyState; RequestStatus get keepScreenOnState; ErrorCodes? get errorCode; GpsTrackingInterval? get interval; GpsAccuracy? get accuracy; bool get isKeepScreenOn;
 /// Create a copy of SettingState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -509,16 +509,16 @@ $SettingStateCopyWith<SettingState> get copyWith => _$SettingStateCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingState&&(identical(other.intervalState, intervalState) || other.intervalState == intervalState)&&(identical(other.accuracyState, accuracyState) || other.accuracyState == accuracyState)&&(identical(other.keepScreenOnState, keepScreenOnState) || other.keepScreenOnState == keepScreenOnState)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isKeepScreenOn, isKeepScreenOn) || other.isKeepScreenOn == isKeepScreenOn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingState&&(identical(other.intervalState, intervalState) || other.intervalState == intervalState)&&(identical(other.accuracyState, accuracyState) || other.accuracyState == accuracyState)&&(identical(other.keepScreenOnState, keepScreenOnState) || other.keepScreenOnState == keepScreenOnState)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isKeepScreenOn, isKeepScreenOn) || other.isKeepScreenOn == isKeepScreenOn));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,intervalState,accuracyState,keepScreenOnState,errorMessage,interval,accuracy,isKeepScreenOn);
+int get hashCode => Object.hash(runtimeType,intervalState,accuracyState,keepScreenOnState,errorCode,interval,accuracy,isKeepScreenOn);
 
 @override
 String toString() {
-  return 'SettingState(intervalState: $intervalState, accuracyState: $accuracyState, keepScreenOnState: $keepScreenOnState, errorMessage: $errorMessage, interval: $interval, accuracy: $accuracy, isKeepScreenOn: $isKeepScreenOn)';
+  return 'SettingState(intervalState: $intervalState, accuracyState: $accuracyState, keepScreenOnState: $keepScreenOnState, errorCode: $errorCode, interval: $interval, accuracy: $accuracy, isKeepScreenOn: $isKeepScreenOn)';
 }
 
 
@@ -529,7 +529,7 @@ abstract mixin class $SettingStateCopyWith<$Res>  {
   factory $SettingStateCopyWith(SettingState value, $Res Function(SettingState) _then) = _$SettingStateCopyWithImpl;
 @useResult
 $Res call({
- RequestStatus intervalState, RequestStatus accuracyState, RequestStatus keepScreenOnState, String errorMessage, GpsTrackingInterval? interval, GpsAccuracy? accuracy, bool isKeepScreenOn
+ RequestStatus intervalState, RequestStatus accuracyState, RequestStatus keepScreenOnState, ErrorCodes? errorCode, GpsTrackingInterval? interval, GpsAccuracy? accuracy, bool isKeepScreenOn
 });
 
 
@@ -546,13 +546,13 @@ class _$SettingStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? intervalState = null,Object? accuracyState = null,Object? keepScreenOnState = null,Object? errorMessage = null,Object? interval = freezed,Object? accuracy = freezed,Object? isKeepScreenOn = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? intervalState = null,Object? accuracyState = null,Object? keepScreenOnState = null,Object? errorCode = freezed,Object? interval = freezed,Object? accuracy = freezed,Object? isKeepScreenOn = null,}) {
   return _then(_self.copyWith(
 intervalState: null == intervalState ? _self.intervalState : intervalState // ignore: cast_nullable_to_non_nullable
 as RequestStatus,accuracyState: null == accuracyState ? _self.accuracyState : accuracyState // ignore: cast_nullable_to_non_nullable
 as RequestStatus,keepScreenOnState: null == keepScreenOnState ? _self.keepScreenOnState : keepScreenOnState // ignore: cast_nullable_to_non_nullable
-as RequestStatus,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String,interval: freezed == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
+as RequestStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as ErrorCodes?,interval: freezed == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
 as GpsTrackingInterval?,accuracy: freezed == accuracy ? _self.accuracy : accuracy // ignore: cast_nullable_to_non_nullable
 as GpsAccuracy?,isKeepScreenOn: null == isKeepScreenOn ? _self.isKeepScreenOn : isKeepScreenOn // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -640,10 +640,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  String errorMessage,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  ErrorCodes? errorCode,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when $default != null:
-return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorMessage,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
+return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorCode,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
   return orElse();
 
 }
@@ -661,10 +661,10 @@ return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  String errorMessage,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  ErrorCodes? errorCode,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)  $default,) {final _that = this;
 switch (_that) {
 case _Initial():
-return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorMessage,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
+return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorCode,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -681,10 +681,10 @@ return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  String errorMessage,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RequestStatus intervalState,  RequestStatus accuracyState,  RequestStatus keepScreenOnState,  ErrorCodes? errorCode,  GpsTrackingInterval? interval,  GpsAccuracy? accuracy,  bool isKeepScreenOn)?  $default,) {final _that = this;
 switch (_that) {
 case _Initial() when $default != null:
-return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorMessage,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
+return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,_that.errorCode,_that.interval,_that.accuracy,_that.isKeepScreenOn);case _:
   return null;
 
 }
@@ -696,13 +696,13 @@ return $default(_that.intervalState,_that.accuracyState,_that.keepScreenOnState,
 
 
 class _Initial implements SettingState {
-  const _Initial({this.intervalState = RequestStatus.idle, this.accuracyState = RequestStatus.idle, this.keepScreenOnState = RequestStatus.idle, this.errorMessage = '', this.interval, this.accuracy, this.isKeepScreenOn = false});
+  const _Initial({this.intervalState = RequestStatus.idle, this.accuracyState = RequestStatus.idle, this.keepScreenOnState = RequestStatus.idle, this.errorCode, this.interval, this.accuracy, this.isKeepScreenOn = false});
   
 
 @override@JsonKey() final  RequestStatus intervalState;
 @override@JsonKey() final  RequestStatus accuracyState;
 @override@JsonKey() final  RequestStatus keepScreenOnState;
-@override@JsonKey() final  String errorMessage;
+@override final  ErrorCodes? errorCode;
 @override final  GpsTrackingInterval? interval;
 @override final  GpsAccuracy? accuracy;
 @override@JsonKey() final  bool isKeepScreenOn;
@@ -717,16 +717,16 @@ _$InitialCopyWith<_Initial> get copyWith => __$InitialCopyWithImpl<_Initial>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.intervalState, intervalState) || other.intervalState == intervalState)&&(identical(other.accuracyState, accuracyState) || other.accuracyState == accuracyState)&&(identical(other.keepScreenOnState, keepScreenOnState) || other.keepScreenOnState == keepScreenOnState)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isKeepScreenOn, isKeepScreenOn) || other.isKeepScreenOn == isKeepScreenOn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.intervalState, intervalState) || other.intervalState == intervalState)&&(identical(other.accuracyState, accuracyState) || other.accuracyState == accuracyState)&&(identical(other.keepScreenOnState, keepScreenOnState) || other.keepScreenOnState == keepScreenOnState)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isKeepScreenOn, isKeepScreenOn) || other.isKeepScreenOn == isKeepScreenOn));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,intervalState,accuracyState,keepScreenOnState,errorMessage,interval,accuracy,isKeepScreenOn);
+int get hashCode => Object.hash(runtimeType,intervalState,accuracyState,keepScreenOnState,errorCode,interval,accuracy,isKeepScreenOn);
 
 @override
 String toString() {
-  return 'SettingState(intervalState: $intervalState, accuracyState: $accuracyState, keepScreenOnState: $keepScreenOnState, errorMessage: $errorMessage, interval: $interval, accuracy: $accuracy, isKeepScreenOn: $isKeepScreenOn)';
+  return 'SettingState(intervalState: $intervalState, accuracyState: $accuracyState, keepScreenOnState: $keepScreenOnState, errorCode: $errorCode, interval: $interval, accuracy: $accuracy, isKeepScreenOn: $isKeepScreenOn)';
 }
 
 
@@ -737,7 +737,7 @@ abstract mixin class _$InitialCopyWith<$Res> implements $SettingStateCopyWith<$R
   factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) _then) = __$InitialCopyWithImpl;
 @override @useResult
 $Res call({
- RequestStatus intervalState, RequestStatus accuracyState, RequestStatus keepScreenOnState, String errorMessage, GpsTrackingInterval? interval, GpsAccuracy? accuracy, bool isKeepScreenOn
+ RequestStatus intervalState, RequestStatus accuracyState, RequestStatus keepScreenOnState, ErrorCodes? errorCode, GpsTrackingInterval? interval, GpsAccuracy? accuracy, bool isKeepScreenOn
 });
 
 
@@ -754,13 +754,13 @@ class __$InitialCopyWithImpl<$Res>
 
 /// Create a copy of SettingState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? intervalState = null,Object? accuracyState = null,Object? keepScreenOnState = null,Object? errorMessage = null,Object? interval = freezed,Object? accuracy = freezed,Object? isKeepScreenOn = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? intervalState = null,Object? accuracyState = null,Object? keepScreenOnState = null,Object? errorCode = freezed,Object? interval = freezed,Object? accuracy = freezed,Object? isKeepScreenOn = null,}) {
   return _then(_Initial(
 intervalState: null == intervalState ? _self.intervalState : intervalState // ignore: cast_nullable_to_non_nullable
 as RequestStatus,accuracyState: null == accuracyState ? _self.accuracyState : accuracyState // ignore: cast_nullable_to_non_nullable
 as RequestStatus,keepScreenOnState: null == keepScreenOnState ? _self.keepScreenOnState : keepScreenOnState // ignore: cast_nullable_to_non_nullable
-as RequestStatus,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String,interval: freezed == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
+as RequestStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as ErrorCodes?,interval: freezed == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
 as GpsTrackingInterval?,accuracy: freezed == accuracy ? _self.accuracy : accuracy // ignore: cast_nullable_to_non_nullable
 as GpsAccuracy?,isKeepScreenOn: null == isKeepScreenOn ? _self.isKeepScreenOn : isKeepScreenOn // ignore: cast_nullable_to_non_nullable
 as bool,

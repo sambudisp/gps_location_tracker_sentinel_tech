@@ -265,7 +265,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteTrackedLocationConfirmationBody.
   ///
   /// In en, this message translates to:
-  /// **'\"Tracked Loc. \${id}\" will be permanently deleted.'**
+  /// **'\"Tracked Loc. {id}\" will be permanently deleted.'**
   String deleteTrackedLocationConfirmationBody(Object id);
 
   /// No description provided for @deleteAllDataConfirmationTitle.
@@ -277,7 +277,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAllDataConfirmationBody.
   ///
   /// In en, this message translates to:
-  /// **'All location history will be permanently deleted. This action cannot be undone.'**
+  /// **'All completed location history will be permanently deleted and cannot be undone. Ongoing tracking will remain.'**
   String get deleteAllDataConfirmationBody;
 
   /// No description provided for @gpsAccuracyLabel.
@@ -381,6 +381,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'*When tracking is running, any changes to Settings will be applied on the next tracking session.'**
   String get settingTrackingWarningDesc;
+
+  /// No description provided for @dataDeletedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data deleted'**
+  String get dataDeletedMessage;
+
+  /// No description provided for @recordsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get recordsLabel;
+
+  /// No description provided for @locationTrackingActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Tracking Active'**
+  String get locationTrackingActiveTitle;
+
+  /// No description provided for @saveFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save location data'**
+  String get saveFailedMessage;
+
+  /// No description provided for @deleteFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete data'**
+  String get deleteFailedMessage;
+
+  /// No description provided for @getDataFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load data'**
+  String get getDataFailedMessage;
+
+  /// No description provided for @saveSettingIntervalFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save GPS Tracking Interval setting'**
+  String get saveSettingIntervalFailedMessage;
+
+  /// No description provided for @saveSettingAccuracyFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save GPS Accuracy setting'**
+  String get saveSettingAccuracyFailedMessage;
+
+  /// No description provided for @saveSettingKeepScreenOnFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save Keep Screen On setting'**
+  String get saveSettingKeepScreenOnFailedMessage;
+
+  /// No description provided for @generalError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get generalError;
 }
 
 class _AppLocalizationsDelegate

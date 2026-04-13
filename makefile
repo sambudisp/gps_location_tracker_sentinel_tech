@@ -32,10 +32,10 @@ asset-gen:
 	fluttergen -c pubspec.yaml ; \
 
 run:
-	flutter run --dart-define-from-file=.env -v -t lib/main.dart;\
+	flutter run -v -t lib/main.dart;\
 
 release-ios:
-	flutter build ipa --dart-define-from-file=.env -t lib/main.dart --obfuscate --split-debug-info=build/app/outputs/symbols ; \
+	flutter build ipa -t lib/main.dart --obfuscate --split-debug-info=build/app/outputs/symbols ; \
 
 release-android:
-	flutter build appbundle --dart-define-from-file=.env -t lib/main.dart --obfuscate --split-debug-info=build/app/outputs/symbols ; \
+	flutter build appbundle -t lib/main.dart --obfuscate --split-debug-info=build/app/outputs/symbols ; \

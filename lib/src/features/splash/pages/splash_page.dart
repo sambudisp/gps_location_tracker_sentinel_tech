@@ -5,7 +5,7 @@ import 'package:gps_location_tracker_sentinel_tech/assets/colors.gen.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/core/core.dart';
 
-import '../../../../assets/assets.dart';
+import '../../../../../assets/assets.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

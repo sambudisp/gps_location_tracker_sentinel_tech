@@ -35,15 +35,6 @@ class DbHelper {
       onCreate: (db, version) async {
         await _onCreate(db, version);
       },
-      /*onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          final scripts = [];
-
-          for (final script in scripts) {
-            await db.execute(script);
-          }
-        }
-      },*/
     );
   }
 

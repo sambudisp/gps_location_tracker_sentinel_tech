@@ -16,7 +16,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     on<_UpdateGpsTrackingInterval>((event, emit) async {
       final result = await repo.updateGpsTrackingInterval(interval: event.interval);
       result.match(
-        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(intervalState: RequestStatus.success, interval: event.interval)),
       );
     });
@@ -25,7 +25,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       emit(state.copyWith(intervalState: RequestStatus.loading));
       final result = await repo.getGpsTrackingInterval();
       result.match(
-        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(intervalState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(intervalState: RequestStatus.success, interval: data)),
       );
     });
@@ -33,7 +33,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     on<_UpdateGpsAccuracy>((event, emit) async {
       final result = await repo.updateGpsAccuracy(accuracy: event.interval);
       result.match(
-        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(accuracyState: RequestStatus.success, accuracy: event.interval)),
       );
     });
@@ -42,7 +42,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       emit(state.copyWith(accuracyState: RequestStatus.loading));
       final result = await repo.getGpsAccuracy();
       result.match(
-        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(accuracyState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(accuracyState: RequestStatus.success, accuracy: data)),
       );
     });
@@ -50,7 +50,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     on<_UpdateKeepScreenOn>((event, emit) async {
       final result = await repo.updateKeepScreenOn(isKeepScreenOn: event.isKeepScreenOn);
       result.match(
-        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(keepScreenOnState: RequestStatus.success, isKeepScreenOn: event.isKeepScreenOn)),
       );
     });
@@ -59,7 +59,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       emit(state.copyWith(keepScreenOnState: RequestStatus.loading));
       final result = await repo.isKeepScreenOn();
       result.match(
-        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorMessage: err.message)),
+        (err) => emit(state.copyWith(keepScreenOnState: RequestStatus.error, errorCode: err.errorCode)),
         (data) => emit(state.copyWith(keepScreenOnState: RequestStatus.success, isKeepScreenOn: data)),
       );
     });

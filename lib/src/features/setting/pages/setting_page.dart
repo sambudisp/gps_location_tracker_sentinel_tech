@@ -74,7 +74,18 @@ class _SettingPageState extends State<SettingPage> {
         ..add(SettingEvent.getGpsAccuracy())
         ..add(SettingEvent.isKeepScreenOn()),
       child: BlocConsumer<SettingBloc, SettingState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.intervalState == RequestStatus.error ||
+              state.accuracyState == RequestStatus.error ||
+              state.keepScreenOnState == RequestStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorCode?.toMessage(context) ?? context.l10n.generalError),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           final interval = state.interval ?? GpsTrackingInterval.s10;
           final accuracy = state.accuracy ?? GpsAccuracy.medium;

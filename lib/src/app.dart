@@ -35,7 +35,6 @@ class _AppState extends State<App> {
       providers: [...LocationTracker.blocProviders, ...Setting.blocProviders],
       child: MaterialApp.router(
         title: 'GPS Location Tracker - Sentinel Tech',
-        //theme: AppTheme.light(),
         builder: EasyLoading.init(
           builder: (context, child) {
             final content = child ?? const SizedBox.shrink();

@@ -112,8 +112,17 @@ class LocationTrackerLocalDatasource {
 
   Future<bool> deleteAllTrackedLocationHistory() async {
     try {
-      await dbSqfliteHelper.execRawDelete('DELETE FROM tracked_location_detail');
-      final result = await dbSqfliteHelper.execRawDelete('DELETE FROM tracked_location');
+      await dbSqfliteHelper.execRawDelete('''
+          DELETE FROM tracked_location_detail
+          WHERE parent_id IN (
+            SELECT id FROM tracked_location
+            WHERE stopped_time IS NOT NULL
+          )
+        ''');
+      final result = await dbSqfliteHelper.execRawDelete('''
+          DELETE FROM tracked_location
+          WHERE stopped_time IS NOT NULL
+        ''');
       return result > 0;
     } catch (e) {
       return false;

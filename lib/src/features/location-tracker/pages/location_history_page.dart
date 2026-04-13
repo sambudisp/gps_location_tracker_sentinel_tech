@@ -78,7 +78,24 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
+    return BlocConsumer<LocationTrackerBloc, LocationTrackerState>(
+      listenWhen: (prev, curr) => prev.stateDeleteTrackedLocationHistory != curr.stateDeleteTrackedLocationHistory,
+      listener: (context, state) {
+        if (state.stateDeleteTrackedLocationHistory == RequestStatus.success) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(context.l10n.dataDeletedMessage), behavior: SnackBarBehavior.floating));
+        } else if (state.stateDeleteTrackedLocationHistory == RequestStatus.error ||
+            state.stateTrackedLocationHistory == RequestStatus.error ||
+            state.stateTrackedLocationHistoryDetail == RequestStatus.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorCode?.toMessage(context) ?? context.l10n.generalError),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
       buildWhen: (prev, curr) =>
           prev.stateTrackedLocationHistory != curr.stateTrackedLocationHistory ||
           prev.trackedLocationHistory != curr.trackedLocationHistory,
@@ -105,7 +122,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
                             _header(items),
                             Expanded(
                               child: state.stateTrackedLocationHistory == RequestStatus.loading
-                                  ? const Center(child: CircularProgressIndicator())
+                                  ? const Center(child: CircularProgressIndicator(color: ColorName.primary))
                                   : items.isEmpty
                                   ? _emptyState()
                                   : ListView.builder(
@@ -160,6 +177,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
   }
 
   Widget _header(List<TrackedLocationDataModel> items) {
+    final hasCompletedItems = items.any((item) => item.stoppedTime != null);
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
       child: Row(
@@ -169,7 +187,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
             '${items.length} ${context.l10n.sessionLabel.toLowerCase()}${items.length != 1 ? 's' : ''}',
             style: TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w700),
           ),
-          if (items.isNotEmpty)
+          if (hasCompletedItems)
             GestureDetector(
               onTap: _confirmDeleteAll,
               child: Text(
@@ -205,9 +223,9 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
 
     return Dismissible(
       key: Key(item.id.toString()),
-      direction: DismissDirection.endToStart,
+      direction: end != null ? DismissDirection.endToStart : DismissDirection.none,
       confirmDismiss: (_) async {
-        if (item.stoppedTime != null) _confirmDelete(item);
+        if (end != null) _confirmDelete(item);
         return false;
       },
       background: Container(
@@ -219,7 +237,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
       ),
       child: GestureDetector(
         onTap: () {
-          context.pushNamed(LocationTrackerRouter.locationHistoryDetail, extra: item);
+          if (end != null) context.pushNamed(LocationTrackerRouter.locationHistoryDetail, extra: item);
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 6),

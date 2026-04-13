@@ -55,18 +55,18 @@ extension LocationTrackerEventPatterns on LocationTrackerEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _StartLocationTracking value)?  startLocationTracking,TResult Function( _StopLocationTracking value)?  stopLocationTracking,TResult Function( _StartLocationTrackingByInterval value)?  startLocationTrackingByInterval,TResult Function( _GetTrackedLocationHistory value)?  getTrackedLocationHistory,TResult Function( _GetTrackedLocationHistoryDetail value)?  getTrackedLocationHistoryDetail,TResult Function( _DeleteTrackedLocationHistory value)?  deleteTrackedLocationHistory,TResult Function( _DeleteAllTrackedLocationHistory value)?  deleteAllTrackedLocationHistory,TResult Function( _RestoreLocationTracking value)?  restoreLocationTracking,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _StartLocationTracking value)?  startLocationTracking,TResult Function( _StopLocationTracking value)?  stopLocationTracking,TResult Function( _GetTrackedLocationHistory value)?  getTrackedLocationHistory,TResult Function( _GetTrackedLocationHistoryDetail value)?  getTrackedLocationHistoryDetail,TResult Function( _DeleteTrackedLocationHistory value)?  deleteTrackedLocationHistory,TResult Function( _DeleteAllTrackedLocationHistory value)?  deleteAllTrackedLocationHistory,TResult Function( _RestoreLocationTracking value)?  restoreLocationTracking,TResult Function( _SetLocationTrackingNotificationCopy value)?  setLocationTrackingNotificationCopy,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _StartLocationTracking() when startLocationTracking != null:
 return startLocationTracking(_that);case _StopLocationTracking() when stopLocationTracking != null:
-return stopLocationTracking(_that);case _StartLocationTrackingByInterval() when startLocationTrackingByInterval != null:
-return startLocationTrackingByInterval(_that);case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
+return stopLocationTracking(_that);case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
 return getTrackedLocationHistory(_that);case _GetTrackedLocationHistoryDetail() when getTrackedLocationHistoryDetail != null:
 return getTrackedLocationHistoryDetail(_that);case _DeleteTrackedLocationHistory() when deleteTrackedLocationHistory != null:
 return deleteTrackedLocationHistory(_that);case _DeleteAllTrackedLocationHistory() when deleteAllTrackedLocationHistory != null:
 return deleteAllTrackedLocationHistory(_that);case _RestoreLocationTracking() when restoreLocationTracking != null:
-return restoreLocationTracking(_that);case _:
+return restoreLocationTracking(_that);case _SetLocationTrackingNotificationCopy() when setLocationTrackingNotificationCopy != null:
+return setLocationTrackingNotificationCopy(_that);case _:
   return orElse();
 
 }
@@ -84,18 +84,18 @@ return restoreLocationTracking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _StartLocationTracking value)  startLocationTracking,required TResult Function( _StopLocationTracking value)  stopLocationTracking,required TResult Function( _StartLocationTrackingByInterval value)  startLocationTrackingByInterval,required TResult Function( _GetTrackedLocationHistory value)  getTrackedLocationHistory,required TResult Function( _GetTrackedLocationHistoryDetail value)  getTrackedLocationHistoryDetail,required TResult Function( _DeleteTrackedLocationHistory value)  deleteTrackedLocationHistory,required TResult Function( _DeleteAllTrackedLocationHistory value)  deleteAllTrackedLocationHistory,required TResult Function( _RestoreLocationTracking value)  restoreLocationTracking,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _StartLocationTracking value)  startLocationTracking,required TResult Function( _StopLocationTracking value)  stopLocationTracking,required TResult Function( _GetTrackedLocationHistory value)  getTrackedLocationHistory,required TResult Function( _GetTrackedLocationHistoryDetail value)  getTrackedLocationHistoryDetail,required TResult Function( _DeleteTrackedLocationHistory value)  deleteTrackedLocationHistory,required TResult Function( _DeleteAllTrackedLocationHistory value)  deleteAllTrackedLocationHistory,required TResult Function( _RestoreLocationTracking value)  restoreLocationTracking,required TResult Function( _SetLocationTrackingNotificationCopy value)  setLocationTrackingNotificationCopy,}){
 final _that = this;
 switch (_that) {
 case _StartLocationTracking():
 return startLocationTracking(_that);case _StopLocationTracking():
-return stopLocationTracking(_that);case _StartLocationTrackingByInterval():
-return startLocationTrackingByInterval(_that);case _GetTrackedLocationHistory():
+return stopLocationTracking(_that);case _GetTrackedLocationHistory():
 return getTrackedLocationHistory(_that);case _GetTrackedLocationHistoryDetail():
 return getTrackedLocationHistoryDetail(_that);case _DeleteTrackedLocationHistory():
 return deleteTrackedLocationHistory(_that);case _DeleteAllTrackedLocationHistory():
 return deleteAllTrackedLocationHistory(_that);case _RestoreLocationTracking():
-return restoreLocationTracking(_that);case _:
+return restoreLocationTracking(_that);case _SetLocationTrackingNotificationCopy():
+return setLocationTrackingNotificationCopy(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -112,18 +112,18 @@ return restoreLocationTracking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _StartLocationTracking value)?  startLocationTracking,TResult? Function( _StopLocationTracking value)?  stopLocationTracking,TResult? Function( _StartLocationTrackingByInterval value)?  startLocationTrackingByInterval,TResult? Function( _GetTrackedLocationHistory value)?  getTrackedLocationHistory,TResult? Function( _GetTrackedLocationHistoryDetail value)?  getTrackedLocationHistoryDetail,TResult? Function( _DeleteTrackedLocationHistory value)?  deleteTrackedLocationHistory,TResult? Function( _DeleteAllTrackedLocationHistory value)?  deleteAllTrackedLocationHistory,TResult? Function( _RestoreLocationTracking value)?  restoreLocationTracking,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _StartLocationTracking value)?  startLocationTracking,TResult? Function( _StopLocationTracking value)?  stopLocationTracking,TResult? Function( _GetTrackedLocationHistory value)?  getTrackedLocationHistory,TResult? Function( _GetTrackedLocationHistoryDetail value)?  getTrackedLocationHistoryDetail,TResult? Function( _DeleteTrackedLocationHistory value)?  deleteTrackedLocationHistory,TResult? Function( _DeleteAllTrackedLocationHistory value)?  deleteAllTrackedLocationHistory,TResult? Function( _RestoreLocationTracking value)?  restoreLocationTracking,TResult? Function( _SetLocationTrackingNotificationCopy value)?  setLocationTrackingNotificationCopy,}){
 final _that = this;
 switch (_that) {
 case _StartLocationTracking() when startLocationTracking != null:
 return startLocationTracking(_that);case _StopLocationTracking() when stopLocationTracking != null:
-return stopLocationTracking(_that);case _StartLocationTrackingByInterval() when startLocationTrackingByInterval != null:
-return startLocationTrackingByInterval(_that);case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
+return stopLocationTracking(_that);case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
 return getTrackedLocationHistory(_that);case _GetTrackedLocationHistoryDetail() when getTrackedLocationHistoryDetail != null:
 return getTrackedLocationHistoryDetail(_that);case _DeleteTrackedLocationHistory() when deleteTrackedLocationHistory != null:
 return deleteTrackedLocationHistory(_that);case _DeleteAllTrackedLocationHistory() when deleteAllTrackedLocationHistory != null:
 return deleteAllTrackedLocationHistory(_that);case _RestoreLocationTracking() when restoreLocationTracking != null:
-return restoreLocationTracking(_that);case _:
+return restoreLocationTracking(_that);case _SetLocationTrackingNotificationCopy() when setLocationTrackingNotificationCopy != null:
+return setLocationTrackingNotificationCopy(_that);case _:
   return null;
 
 }
@@ -140,17 +140,17 @@ return restoreLocationTracking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  startLocationTracking,TResult Function()?  stopLocationTracking,TResult Function()?  startLocationTrackingByInterval,TResult Function()?  getTrackedLocationHistory,TResult Function( int? parentId)?  getTrackedLocationHistoryDetail,TResult Function( int? id)?  deleteTrackedLocationHistory,TResult Function()?  deleteAllTrackedLocationHistory,TResult Function()?  restoreLocationTracking,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  startLocationTracking,TResult Function()?  stopLocationTracking,TResult Function()?  getTrackedLocationHistory,TResult Function( int? parentId)?  getTrackedLocationHistoryDetail,TResult Function( int? id)?  deleteTrackedLocationHistory,TResult Function()?  deleteAllTrackedLocationHistory,TResult Function()?  restoreLocationTracking,TResult Function( String locationTrackingActiveTitle,  String locationTrackingActiveLabel)?  setLocationTrackingNotificationCopy,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StartLocationTracking() when startLocationTracking != null:
 return startLocationTracking();case _StopLocationTracking() when stopLocationTracking != null:
-return stopLocationTracking();case _StartLocationTrackingByInterval() when startLocationTrackingByInterval != null:
-return startLocationTrackingByInterval();case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
+return stopLocationTracking();case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
 return getTrackedLocationHistory();case _GetTrackedLocationHistoryDetail() when getTrackedLocationHistoryDetail != null:
 return getTrackedLocationHistoryDetail(_that.parentId);case _DeleteTrackedLocationHistory() when deleteTrackedLocationHistory != null:
 return deleteTrackedLocationHistory(_that.id);case _DeleteAllTrackedLocationHistory() when deleteAllTrackedLocationHistory != null:
 return deleteAllTrackedLocationHistory();case _RestoreLocationTracking() when restoreLocationTracking != null:
-return restoreLocationTracking();case _:
+return restoreLocationTracking();case _SetLocationTrackingNotificationCopy() when setLocationTrackingNotificationCopy != null:
+return setLocationTrackingNotificationCopy(_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   return orElse();
 
 }
@@ -168,17 +168,17 @@ return restoreLocationTracking();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  startLocationTracking,required TResult Function()  stopLocationTracking,required TResult Function()  startLocationTrackingByInterval,required TResult Function()  getTrackedLocationHistory,required TResult Function( int? parentId)  getTrackedLocationHistoryDetail,required TResult Function( int? id)  deleteTrackedLocationHistory,required TResult Function()  deleteAllTrackedLocationHistory,required TResult Function()  restoreLocationTracking,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  startLocationTracking,required TResult Function()  stopLocationTracking,required TResult Function()  getTrackedLocationHistory,required TResult Function( int? parentId)  getTrackedLocationHistoryDetail,required TResult Function( int? id)  deleteTrackedLocationHistory,required TResult Function()  deleteAllTrackedLocationHistory,required TResult Function()  restoreLocationTracking,required TResult Function( String locationTrackingActiveTitle,  String locationTrackingActiveLabel)  setLocationTrackingNotificationCopy,}) {final _that = this;
 switch (_that) {
 case _StartLocationTracking():
 return startLocationTracking();case _StopLocationTracking():
-return stopLocationTracking();case _StartLocationTrackingByInterval():
-return startLocationTrackingByInterval();case _GetTrackedLocationHistory():
+return stopLocationTracking();case _GetTrackedLocationHistory():
 return getTrackedLocationHistory();case _GetTrackedLocationHistoryDetail():
 return getTrackedLocationHistoryDetail(_that.parentId);case _DeleteTrackedLocationHistory():
 return deleteTrackedLocationHistory(_that.id);case _DeleteAllTrackedLocationHistory():
 return deleteAllTrackedLocationHistory();case _RestoreLocationTracking():
-return restoreLocationTracking();case _:
+return restoreLocationTracking();case _SetLocationTrackingNotificationCopy():
+return setLocationTrackingNotificationCopy(_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,17 +195,17 @@ return restoreLocationTracking();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  startLocationTracking,TResult? Function()?  stopLocationTracking,TResult? Function()?  startLocationTrackingByInterval,TResult? Function()?  getTrackedLocationHistory,TResult? Function( int? parentId)?  getTrackedLocationHistoryDetail,TResult? Function( int? id)?  deleteTrackedLocationHistory,TResult? Function()?  deleteAllTrackedLocationHistory,TResult? Function()?  restoreLocationTracking,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  startLocationTracking,TResult? Function()?  stopLocationTracking,TResult? Function()?  getTrackedLocationHistory,TResult? Function( int? parentId)?  getTrackedLocationHistoryDetail,TResult? Function( int? id)?  deleteTrackedLocationHistory,TResult? Function()?  deleteAllTrackedLocationHistory,TResult? Function()?  restoreLocationTracking,TResult? Function( String locationTrackingActiveTitle,  String locationTrackingActiveLabel)?  setLocationTrackingNotificationCopy,}) {final _that = this;
 switch (_that) {
 case _StartLocationTracking() when startLocationTracking != null:
 return startLocationTracking();case _StopLocationTracking() when stopLocationTracking != null:
-return stopLocationTracking();case _StartLocationTrackingByInterval() when startLocationTrackingByInterval != null:
-return startLocationTrackingByInterval();case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
+return stopLocationTracking();case _GetTrackedLocationHistory() when getTrackedLocationHistory != null:
 return getTrackedLocationHistory();case _GetTrackedLocationHistoryDetail() when getTrackedLocationHistoryDetail != null:
 return getTrackedLocationHistoryDetail(_that.parentId);case _DeleteTrackedLocationHistory() when deleteTrackedLocationHistory != null:
 return deleteTrackedLocationHistory(_that.id);case _DeleteAllTrackedLocationHistory() when deleteAllTrackedLocationHistory != null:
 return deleteAllTrackedLocationHistory();case _RestoreLocationTracking() when restoreLocationTracking != null:
-return restoreLocationTracking();case _:
+return restoreLocationTracking();case _SetLocationTrackingNotificationCopy() when setLocationTrackingNotificationCopy != null:
+return setLocationTrackingNotificationCopy(_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   return null;
 
 }
@@ -269,38 +269,6 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'LocationTrackerEvent.stopLocationTracking()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _StartLocationTrackingByInterval implements LocationTrackerEvent {
-  const _StartLocationTrackingByInterval();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StartLocationTrackingByInterval);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'LocationTrackerEvent.startLocationTrackingByInterval()';
 }
 
 
@@ -538,9 +506,77 @@ String toString() {
 
 
 /// @nodoc
+
+
+class _SetLocationTrackingNotificationCopy implements LocationTrackerEvent {
+  const _SetLocationTrackingNotificationCopy({required this.locationTrackingActiveTitle, required this.locationTrackingActiveLabel});
+  
+
+ final  String locationTrackingActiveTitle;
+ final  String locationTrackingActiveLabel;
+
+/// Create a copy of LocationTrackerEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SetLocationTrackingNotificationCopyCopyWith<_SetLocationTrackingNotificationCopy> get copyWith => __$SetLocationTrackingNotificationCopyCopyWithImpl<_SetLocationTrackingNotificationCopy>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetLocationTrackingNotificationCopy&&(identical(other.locationTrackingActiveTitle, locationTrackingActiveTitle) || other.locationTrackingActiveTitle == locationTrackingActiveTitle)&&(identical(other.locationTrackingActiveLabel, locationTrackingActiveLabel) || other.locationTrackingActiveLabel == locationTrackingActiveLabel));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,locationTrackingActiveTitle,locationTrackingActiveLabel);
+
+@override
+String toString() {
+  return 'LocationTrackerEvent.setLocationTrackingNotificationCopy(locationTrackingActiveTitle: $locationTrackingActiveTitle, locationTrackingActiveLabel: $locationTrackingActiveLabel)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SetLocationTrackingNotificationCopyCopyWith<$Res> implements $LocationTrackerEventCopyWith<$Res> {
+  factory _$SetLocationTrackingNotificationCopyCopyWith(_SetLocationTrackingNotificationCopy value, $Res Function(_SetLocationTrackingNotificationCopy) _then) = __$SetLocationTrackingNotificationCopyCopyWithImpl;
+@useResult
+$Res call({
+ String locationTrackingActiveTitle, String locationTrackingActiveLabel
+});
+
+
+
+
+}
+/// @nodoc
+class __$SetLocationTrackingNotificationCopyCopyWithImpl<$Res>
+    implements _$SetLocationTrackingNotificationCopyCopyWith<$Res> {
+  __$SetLocationTrackingNotificationCopyCopyWithImpl(this._self, this._then);
+
+  final _SetLocationTrackingNotificationCopy _self;
+  final $Res Function(_SetLocationTrackingNotificationCopy) _then;
+
+/// Create a copy of LocationTrackerEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? locationTrackingActiveTitle = null,Object? locationTrackingActiveLabel = null,}) {
+  return _then(_SetLocationTrackingNotificationCopy(
+locationTrackingActiveTitle: null == locationTrackingActiveTitle ? _self.locationTrackingActiveTitle : locationTrackingActiveTitle // ignore: cast_nullable_to_non_nullable
+as String,locationTrackingActiveLabel: null == locationTrackingActiveLabel ? _self.locationTrackingActiveLabel : locationTrackingActiveLabel // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$LocationTrackerState {
 
- RequestStatus get stateLocationTracking; RequestStatus get stateLocationTrackingByInterval; RequestStatus get stateTrackedLocationHistory; RequestStatus get stateTrackedLocationHistoryDetail; RequestStatus get stateDeleteTrackedLocationHistory; String get errorMessage; int? get activeTrackingId; String? get activeTrackingStartedTime; List<TrackedLocationDataModel> get trackedLocationHistory; List<TrackedLocationDataDetailModel> get trackedLocationHistoryDetail;
+ RequestStatus get stateLocationTracking; RequestStatus get stateTrackedLocationHistory; RequestStatus get stateTrackedLocationHistoryDetail; RequestStatus get stateDeleteTrackedLocationHistory; ErrorCodes? get errorCode; int? get activeTrackingId; String? get activeTrackingStartedTime; List<TrackedLocationDataModel> get trackedLocationHistory; List<TrackedLocationDataDetailModel> get trackedLocationHistoryDetail; String get locationTrackingActiveTitle; String get locationTrackingActiveLabel;
 /// Create a copy of LocationTrackerState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -551,16 +587,16 @@ $LocationTrackerStateCopyWith<LocationTrackerState> get copyWith => _$LocationTr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocationTrackerState&&(identical(other.stateLocationTracking, stateLocationTracking) || other.stateLocationTracking == stateLocationTracking)&&(identical(other.stateLocationTrackingByInterval, stateLocationTrackingByInterval) || other.stateLocationTrackingByInterval == stateLocationTrackingByInterval)&&(identical(other.stateTrackedLocationHistory, stateTrackedLocationHistory) || other.stateTrackedLocationHistory == stateTrackedLocationHistory)&&(identical(other.stateTrackedLocationHistoryDetail, stateTrackedLocationHistoryDetail) || other.stateTrackedLocationHistoryDetail == stateTrackedLocationHistoryDetail)&&(identical(other.stateDeleteTrackedLocationHistory, stateDeleteTrackedLocationHistory) || other.stateDeleteTrackedLocationHistory == stateDeleteTrackedLocationHistory)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.activeTrackingId, activeTrackingId) || other.activeTrackingId == activeTrackingId)&&(identical(other.activeTrackingStartedTime, activeTrackingStartedTime) || other.activeTrackingStartedTime == activeTrackingStartedTime)&&const DeepCollectionEquality().equals(other.trackedLocationHistory, trackedLocationHistory)&&const DeepCollectionEquality().equals(other.trackedLocationHistoryDetail, trackedLocationHistoryDetail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocationTrackerState&&(identical(other.stateLocationTracking, stateLocationTracking) || other.stateLocationTracking == stateLocationTracking)&&(identical(other.stateTrackedLocationHistory, stateTrackedLocationHistory) || other.stateTrackedLocationHistory == stateTrackedLocationHistory)&&(identical(other.stateTrackedLocationHistoryDetail, stateTrackedLocationHistoryDetail) || other.stateTrackedLocationHistoryDetail == stateTrackedLocationHistoryDetail)&&(identical(other.stateDeleteTrackedLocationHistory, stateDeleteTrackedLocationHistory) || other.stateDeleteTrackedLocationHistory == stateDeleteTrackedLocationHistory)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.activeTrackingId, activeTrackingId) || other.activeTrackingId == activeTrackingId)&&(identical(other.activeTrackingStartedTime, activeTrackingStartedTime) || other.activeTrackingStartedTime == activeTrackingStartedTime)&&const DeepCollectionEquality().equals(other.trackedLocationHistory, trackedLocationHistory)&&const DeepCollectionEquality().equals(other.trackedLocationHistoryDetail, trackedLocationHistoryDetail)&&(identical(other.locationTrackingActiveTitle, locationTrackingActiveTitle) || other.locationTrackingActiveTitle == locationTrackingActiveTitle)&&(identical(other.locationTrackingActiveLabel, locationTrackingActiveLabel) || other.locationTrackingActiveLabel == locationTrackingActiveLabel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,stateLocationTracking,stateLocationTrackingByInterval,stateTrackedLocationHistory,stateTrackedLocationHistoryDetail,stateDeleteTrackedLocationHistory,errorMessage,activeTrackingId,activeTrackingStartedTime,const DeepCollectionEquality().hash(trackedLocationHistory),const DeepCollectionEquality().hash(trackedLocationHistoryDetail));
+int get hashCode => Object.hash(runtimeType,stateLocationTracking,stateTrackedLocationHistory,stateTrackedLocationHistoryDetail,stateDeleteTrackedLocationHistory,errorCode,activeTrackingId,activeTrackingStartedTime,const DeepCollectionEquality().hash(trackedLocationHistory),const DeepCollectionEquality().hash(trackedLocationHistoryDetail),locationTrackingActiveTitle,locationTrackingActiveLabel);
 
 @override
 String toString() {
-  return 'LocationTrackerState(stateLocationTracking: $stateLocationTracking, stateLocationTrackingByInterval: $stateLocationTrackingByInterval, stateTrackedLocationHistory: $stateTrackedLocationHistory, stateTrackedLocationHistoryDetail: $stateTrackedLocationHistoryDetail, stateDeleteTrackedLocationHistory: $stateDeleteTrackedLocationHistory, errorMessage: $errorMessage, activeTrackingId: $activeTrackingId, activeTrackingStartedTime: $activeTrackingStartedTime, trackedLocationHistory: $trackedLocationHistory, trackedLocationHistoryDetail: $trackedLocationHistoryDetail)';
+  return 'LocationTrackerState(stateLocationTracking: $stateLocationTracking, stateTrackedLocationHistory: $stateTrackedLocationHistory, stateTrackedLocationHistoryDetail: $stateTrackedLocationHistoryDetail, stateDeleteTrackedLocationHistory: $stateDeleteTrackedLocationHistory, errorCode: $errorCode, activeTrackingId: $activeTrackingId, activeTrackingStartedTime: $activeTrackingStartedTime, trackedLocationHistory: $trackedLocationHistory, trackedLocationHistoryDetail: $trackedLocationHistoryDetail, locationTrackingActiveTitle: $locationTrackingActiveTitle, locationTrackingActiveLabel: $locationTrackingActiveLabel)';
 }
 
 
@@ -571,7 +607,7 @@ abstract mixin class $LocationTrackerStateCopyWith<$Res>  {
   factory $LocationTrackerStateCopyWith(LocationTrackerState value, $Res Function(LocationTrackerState) _then) = _$LocationTrackerStateCopyWithImpl;
 @useResult
 $Res call({
- RequestStatus stateLocationTracking, RequestStatus stateLocationTrackingByInterval, RequestStatus stateTrackedLocationHistory, RequestStatus stateTrackedLocationHistoryDetail, RequestStatus stateDeleteTrackedLocationHistory, String errorMessage, int? activeTrackingId, String? activeTrackingStartedTime, List<TrackedLocationDataModel> trackedLocationHistory, List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail
+ RequestStatus stateLocationTracking, RequestStatus stateTrackedLocationHistory, RequestStatus stateTrackedLocationHistoryDetail, RequestStatus stateDeleteTrackedLocationHistory, ErrorCodes? errorCode, int? activeTrackingId, String? activeTrackingStartedTime, List<TrackedLocationDataModel> trackedLocationHistory, List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail, String locationTrackingActiveTitle, String locationTrackingActiveLabel
 });
 
 
@@ -588,19 +624,20 @@ class _$LocationTrackerStateCopyWithImpl<$Res>
 
 /// Create a copy of LocationTrackerState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? stateLocationTracking = null,Object? stateLocationTrackingByInterval = null,Object? stateTrackedLocationHistory = null,Object? stateTrackedLocationHistoryDetail = null,Object? stateDeleteTrackedLocationHistory = null,Object? errorMessage = null,Object? activeTrackingId = freezed,Object? activeTrackingStartedTime = freezed,Object? trackedLocationHistory = null,Object? trackedLocationHistoryDetail = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? stateLocationTracking = null,Object? stateTrackedLocationHistory = null,Object? stateTrackedLocationHistoryDetail = null,Object? stateDeleteTrackedLocationHistory = null,Object? errorCode = freezed,Object? activeTrackingId = freezed,Object? activeTrackingStartedTime = freezed,Object? trackedLocationHistory = null,Object? trackedLocationHistoryDetail = null,Object? locationTrackingActiveTitle = null,Object? locationTrackingActiveLabel = null,}) {
   return _then(_self.copyWith(
 stateLocationTracking: null == stateLocationTracking ? _self.stateLocationTracking : stateLocationTracking // ignore: cast_nullable_to_non_nullable
-as RequestStatus,stateLocationTrackingByInterval: null == stateLocationTrackingByInterval ? _self.stateLocationTrackingByInterval : stateLocationTrackingByInterval // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateTrackedLocationHistory: null == stateTrackedLocationHistory ? _self.stateTrackedLocationHistory : stateTrackedLocationHistory // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateTrackedLocationHistoryDetail: null == stateTrackedLocationHistoryDetail ? _self.stateTrackedLocationHistoryDetail : stateTrackedLocationHistoryDetail // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateDeleteTrackedLocationHistory: null == stateDeleteTrackedLocationHistory ? _self.stateDeleteTrackedLocationHistory : stateDeleteTrackedLocationHistory // ignore: cast_nullable_to_non_nullable
-as RequestStatus,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String,activeTrackingId: freezed == activeTrackingId ? _self.activeTrackingId : activeTrackingId // ignore: cast_nullable_to_non_nullable
+as RequestStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as ErrorCodes?,activeTrackingId: freezed == activeTrackingId ? _self.activeTrackingId : activeTrackingId // ignore: cast_nullable_to_non_nullable
 as int?,activeTrackingStartedTime: freezed == activeTrackingStartedTime ? _self.activeTrackingStartedTime : activeTrackingStartedTime // ignore: cast_nullable_to_non_nullable
 as String?,trackedLocationHistory: null == trackedLocationHistory ? _self.trackedLocationHistory : trackedLocationHistory // ignore: cast_nullable_to_non_nullable
 as List<TrackedLocationDataModel>,trackedLocationHistoryDetail: null == trackedLocationHistoryDetail ? _self.trackedLocationHistoryDetail : trackedLocationHistoryDetail // ignore: cast_nullable_to_non_nullable
-as List<TrackedLocationDataDetailModel>,
+as List<TrackedLocationDataDetailModel>,locationTrackingActiveTitle: null == locationTrackingActiveTitle ? _self.locationTrackingActiveTitle : locationTrackingActiveTitle // ignore: cast_nullable_to_non_nullable
+as String,locationTrackingActiveLabel: null == locationTrackingActiveLabel ? _self.locationTrackingActiveLabel : locationTrackingActiveLabel // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -685,10 +722,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RequestStatus stateLocationTracking,  RequestStatus stateLocationTrackingByInterval,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  String errorMessage,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RequestStatus stateLocationTracking,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  ErrorCodes? errorCode,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail,  String locationTrackingActiveTitle,  String locationTrackingActiveLabel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when $default != null:
-return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterval,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorMessage,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail);case _:
+return $default(_that.stateLocationTracking,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorCode,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail,_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   return orElse();
 
 }
@@ -706,10 +743,10 @@ return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterva
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RequestStatus stateLocationTracking,  RequestStatus stateLocationTrackingByInterval,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  String errorMessage,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RequestStatus stateLocationTracking,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  ErrorCodes? errorCode,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail,  String locationTrackingActiveTitle,  String locationTrackingActiveLabel)  $default,) {final _that = this;
 switch (_that) {
 case _Initial():
-return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterval,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorMessage,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail);case _:
+return $default(_that.stateLocationTracking,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorCode,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail,_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -726,10 +763,10 @@ return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterva
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RequestStatus stateLocationTracking,  RequestStatus stateLocationTrackingByInterval,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  String errorMessage,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RequestStatus stateLocationTracking,  RequestStatus stateTrackedLocationHistory,  RequestStatus stateTrackedLocationHistoryDetail,  RequestStatus stateDeleteTrackedLocationHistory,  ErrorCodes? errorCode,  int? activeTrackingId,  String? activeTrackingStartedTime,  List<TrackedLocationDataModel> trackedLocationHistory,  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail,  String locationTrackingActiveTitle,  String locationTrackingActiveLabel)?  $default,) {final _that = this;
 switch (_that) {
 case _Initial() when $default != null:
-return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterval,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorMessage,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail);case _:
+return $default(_that.stateLocationTracking,_that.stateTrackedLocationHistory,_that.stateTrackedLocationHistoryDetail,_that.stateDeleteTrackedLocationHistory,_that.errorCode,_that.activeTrackingId,_that.activeTrackingStartedTime,_that.trackedLocationHistory,_that.trackedLocationHistoryDetail,_that.locationTrackingActiveTitle,_that.locationTrackingActiveLabel);case _:
   return null;
 
 }
@@ -741,15 +778,14 @@ return $default(_that.stateLocationTracking,_that.stateLocationTrackingByInterva
 
 
 class _Initial implements LocationTrackerState {
-  const _Initial({this.stateLocationTracking = RequestStatus.idle, this.stateLocationTrackingByInterval = RequestStatus.idle, this.stateTrackedLocationHistory = RequestStatus.idle, this.stateTrackedLocationHistoryDetail = RequestStatus.idle, this.stateDeleteTrackedLocationHistory = RequestStatus.idle, this.errorMessage = '', this.activeTrackingId = 0, this.activeTrackingStartedTime = '', final  List<TrackedLocationDataModel> trackedLocationHistory = const [], final  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail = const []}): _trackedLocationHistory = trackedLocationHistory,_trackedLocationHistoryDetail = trackedLocationHistoryDetail;
+  const _Initial({this.stateLocationTracking = RequestStatus.idle, this.stateTrackedLocationHistory = RequestStatus.idle, this.stateTrackedLocationHistoryDetail = RequestStatus.idle, this.stateDeleteTrackedLocationHistory = RequestStatus.idle, this.errorCode, this.activeTrackingId = 0, this.activeTrackingStartedTime = '', final  List<TrackedLocationDataModel> trackedLocationHistory = const [], final  List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail = const [], this.locationTrackingActiveTitle = '', this.locationTrackingActiveLabel = ''}): _trackedLocationHistory = trackedLocationHistory,_trackedLocationHistoryDetail = trackedLocationHistoryDetail;
   
 
 @override@JsonKey() final  RequestStatus stateLocationTracking;
-@override@JsonKey() final  RequestStatus stateLocationTrackingByInterval;
 @override@JsonKey() final  RequestStatus stateTrackedLocationHistory;
 @override@JsonKey() final  RequestStatus stateTrackedLocationHistoryDetail;
 @override@JsonKey() final  RequestStatus stateDeleteTrackedLocationHistory;
-@override@JsonKey() final  String errorMessage;
+@override final  ErrorCodes? errorCode;
 @override@JsonKey() final  int? activeTrackingId;
 @override@JsonKey() final  String? activeTrackingStartedTime;
  final  List<TrackedLocationDataModel> _trackedLocationHistory;
@@ -766,6 +802,8 @@ class _Initial implements LocationTrackerState {
   return EqualUnmodifiableListView(_trackedLocationHistoryDetail);
 }
 
+@override@JsonKey() final  String locationTrackingActiveTitle;
+@override@JsonKey() final  String locationTrackingActiveLabel;
 
 /// Create a copy of LocationTrackerState
 /// with the given fields replaced by the non-null parameter values.
@@ -777,16 +815,16 @@ _$InitialCopyWith<_Initial> get copyWith => __$InitialCopyWithImpl<_Initial>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.stateLocationTracking, stateLocationTracking) || other.stateLocationTracking == stateLocationTracking)&&(identical(other.stateLocationTrackingByInterval, stateLocationTrackingByInterval) || other.stateLocationTrackingByInterval == stateLocationTrackingByInterval)&&(identical(other.stateTrackedLocationHistory, stateTrackedLocationHistory) || other.stateTrackedLocationHistory == stateTrackedLocationHistory)&&(identical(other.stateTrackedLocationHistoryDetail, stateTrackedLocationHistoryDetail) || other.stateTrackedLocationHistoryDetail == stateTrackedLocationHistoryDetail)&&(identical(other.stateDeleteTrackedLocationHistory, stateDeleteTrackedLocationHistory) || other.stateDeleteTrackedLocationHistory == stateDeleteTrackedLocationHistory)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.activeTrackingId, activeTrackingId) || other.activeTrackingId == activeTrackingId)&&(identical(other.activeTrackingStartedTime, activeTrackingStartedTime) || other.activeTrackingStartedTime == activeTrackingStartedTime)&&const DeepCollectionEquality().equals(other._trackedLocationHistory, _trackedLocationHistory)&&const DeepCollectionEquality().equals(other._trackedLocationHistoryDetail, _trackedLocationHistoryDetail));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.stateLocationTracking, stateLocationTracking) || other.stateLocationTracking == stateLocationTracking)&&(identical(other.stateTrackedLocationHistory, stateTrackedLocationHistory) || other.stateTrackedLocationHistory == stateTrackedLocationHistory)&&(identical(other.stateTrackedLocationHistoryDetail, stateTrackedLocationHistoryDetail) || other.stateTrackedLocationHistoryDetail == stateTrackedLocationHistoryDetail)&&(identical(other.stateDeleteTrackedLocationHistory, stateDeleteTrackedLocationHistory) || other.stateDeleteTrackedLocationHistory == stateDeleteTrackedLocationHistory)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.activeTrackingId, activeTrackingId) || other.activeTrackingId == activeTrackingId)&&(identical(other.activeTrackingStartedTime, activeTrackingStartedTime) || other.activeTrackingStartedTime == activeTrackingStartedTime)&&const DeepCollectionEquality().equals(other._trackedLocationHistory, _trackedLocationHistory)&&const DeepCollectionEquality().equals(other._trackedLocationHistoryDetail, _trackedLocationHistoryDetail)&&(identical(other.locationTrackingActiveTitle, locationTrackingActiveTitle) || other.locationTrackingActiveTitle == locationTrackingActiveTitle)&&(identical(other.locationTrackingActiveLabel, locationTrackingActiveLabel) || other.locationTrackingActiveLabel == locationTrackingActiveLabel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,stateLocationTracking,stateLocationTrackingByInterval,stateTrackedLocationHistory,stateTrackedLocationHistoryDetail,stateDeleteTrackedLocationHistory,errorMessage,activeTrackingId,activeTrackingStartedTime,const DeepCollectionEquality().hash(_trackedLocationHistory),const DeepCollectionEquality().hash(_trackedLocationHistoryDetail));
+int get hashCode => Object.hash(runtimeType,stateLocationTracking,stateTrackedLocationHistory,stateTrackedLocationHistoryDetail,stateDeleteTrackedLocationHistory,errorCode,activeTrackingId,activeTrackingStartedTime,const DeepCollectionEquality().hash(_trackedLocationHistory),const DeepCollectionEquality().hash(_trackedLocationHistoryDetail),locationTrackingActiveTitle,locationTrackingActiveLabel);
 
 @override
 String toString() {
-  return 'LocationTrackerState(stateLocationTracking: $stateLocationTracking, stateLocationTrackingByInterval: $stateLocationTrackingByInterval, stateTrackedLocationHistory: $stateTrackedLocationHistory, stateTrackedLocationHistoryDetail: $stateTrackedLocationHistoryDetail, stateDeleteTrackedLocationHistory: $stateDeleteTrackedLocationHistory, errorMessage: $errorMessage, activeTrackingId: $activeTrackingId, activeTrackingStartedTime: $activeTrackingStartedTime, trackedLocationHistory: $trackedLocationHistory, trackedLocationHistoryDetail: $trackedLocationHistoryDetail)';
+  return 'LocationTrackerState(stateLocationTracking: $stateLocationTracking, stateTrackedLocationHistory: $stateTrackedLocationHistory, stateTrackedLocationHistoryDetail: $stateTrackedLocationHistoryDetail, stateDeleteTrackedLocationHistory: $stateDeleteTrackedLocationHistory, errorCode: $errorCode, activeTrackingId: $activeTrackingId, activeTrackingStartedTime: $activeTrackingStartedTime, trackedLocationHistory: $trackedLocationHistory, trackedLocationHistoryDetail: $trackedLocationHistoryDetail, locationTrackingActiveTitle: $locationTrackingActiveTitle, locationTrackingActiveLabel: $locationTrackingActiveLabel)';
 }
 
 
@@ -797,7 +835,7 @@ abstract mixin class _$InitialCopyWith<$Res> implements $LocationTrackerStateCop
   factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) _then) = __$InitialCopyWithImpl;
 @override @useResult
 $Res call({
- RequestStatus stateLocationTracking, RequestStatus stateLocationTrackingByInterval, RequestStatus stateTrackedLocationHistory, RequestStatus stateTrackedLocationHistoryDetail, RequestStatus stateDeleteTrackedLocationHistory, String errorMessage, int? activeTrackingId, String? activeTrackingStartedTime, List<TrackedLocationDataModel> trackedLocationHistory, List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail
+ RequestStatus stateLocationTracking, RequestStatus stateTrackedLocationHistory, RequestStatus stateTrackedLocationHistoryDetail, RequestStatus stateDeleteTrackedLocationHistory, ErrorCodes? errorCode, int? activeTrackingId, String? activeTrackingStartedTime, List<TrackedLocationDataModel> trackedLocationHistory, List<TrackedLocationDataDetailModel> trackedLocationHistoryDetail, String locationTrackingActiveTitle, String locationTrackingActiveLabel
 });
 
 
@@ -814,19 +852,20 @@ class __$InitialCopyWithImpl<$Res>
 
 /// Create a copy of LocationTrackerState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? stateLocationTracking = null,Object? stateLocationTrackingByInterval = null,Object? stateTrackedLocationHistory = null,Object? stateTrackedLocationHistoryDetail = null,Object? stateDeleteTrackedLocationHistory = null,Object? errorMessage = null,Object? activeTrackingId = freezed,Object? activeTrackingStartedTime = freezed,Object? trackedLocationHistory = null,Object? trackedLocationHistoryDetail = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? stateLocationTracking = null,Object? stateTrackedLocationHistory = null,Object? stateTrackedLocationHistoryDetail = null,Object? stateDeleteTrackedLocationHistory = null,Object? errorCode = freezed,Object? activeTrackingId = freezed,Object? activeTrackingStartedTime = freezed,Object? trackedLocationHistory = null,Object? trackedLocationHistoryDetail = null,Object? locationTrackingActiveTitle = null,Object? locationTrackingActiveLabel = null,}) {
   return _then(_Initial(
 stateLocationTracking: null == stateLocationTracking ? _self.stateLocationTracking : stateLocationTracking // ignore: cast_nullable_to_non_nullable
-as RequestStatus,stateLocationTrackingByInterval: null == stateLocationTrackingByInterval ? _self.stateLocationTrackingByInterval : stateLocationTrackingByInterval // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateTrackedLocationHistory: null == stateTrackedLocationHistory ? _self.stateTrackedLocationHistory : stateTrackedLocationHistory // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateTrackedLocationHistoryDetail: null == stateTrackedLocationHistoryDetail ? _self.stateTrackedLocationHistoryDetail : stateTrackedLocationHistoryDetail // ignore: cast_nullable_to_non_nullable
 as RequestStatus,stateDeleteTrackedLocationHistory: null == stateDeleteTrackedLocationHistory ? _self.stateDeleteTrackedLocationHistory : stateDeleteTrackedLocationHistory // ignore: cast_nullable_to_non_nullable
-as RequestStatus,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String,activeTrackingId: freezed == activeTrackingId ? _self.activeTrackingId : activeTrackingId // ignore: cast_nullable_to_non_nullable
+as RequestStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as ErrorCodes?,activeTrackingId: freezed == activeTrackingId ? _self.activeTrackingId : activeTrackingId // ignore: cast_nullable_to_non_nullable
 as int?,activeTrackingStartedTime: freezed == activeTrackingStartedTime ? _self.activeTrackingStartedTime : activeTrackingStartedTime // ignore: cast_nullable_to_non_nullable
 as String?,trackedLocationHistory: null == trackedLocationHistory ? _self._trackedLocationHistory : trackedLocationHistory // ignore: cast_nullable_to_non_nullable
 as List<TrackedLocationDataModel>,trackedLocationHistoryDetail: null == trackedLocationHistoryDetail ? _self._trackedLocationHistoryDetail : trackedLocationHistoryDetail // ignore: cast_nullable_to_non_nullable
-as List<TrackedLocationDataDetailModel>,
+as List<TrackedLocationDataDetailModel>,locationTrackingActiveTitle: null == locationTrackingActiveTitle ? _self.locationTrackingActiveTitle : locationTrackingActiveTitle // ignore: cast_nullable_to_non_nullable
+as String,locationTrackingActiveLabel: null == locationTrackingActiveLabel ? _self.locationTrackingActiveLabel : locationTrackingActiveLabel // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

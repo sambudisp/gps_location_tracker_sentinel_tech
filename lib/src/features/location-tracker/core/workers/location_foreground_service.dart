@@ -24,7 +24,12 @@ class LocationForegroundService {
     );
   }
 
-  static Future<void> start({required int parentId, required GpsTrackingInterval interval}) async {
+  static Future<void> start({
+    required int parentId,
+    required GpsTrackingInterval interval,
+    required String locationTrackingActiveTitle,
+    required String locationTrackingActiveLabel,
+  }) async {
     init(interval: interval);
 
     await FlutterForegroundTask.saveData(key: 'parentId', value: parentId);
@@ -34,8 +39,8 @@ class LocationForegroundService {
     } else {
       await FlutterForegroundTask.startService(
         serviceId: 1000,
-        notificationTitle: 'Location Tracking Active',
-        notificationText: 'Tracking your location...',
+        notificationTitle: locationTrackingActiveTitle,
+        notificationText: locationTrackingActiveLabel,
         callback: startCallback,
       );
     }

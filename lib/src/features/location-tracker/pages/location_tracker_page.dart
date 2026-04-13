@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
@@ -49,7 +51,18 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
     super.initState();
     locationTrackerBloc = locator<LocationTrackerBloc>();
     _animationController = AnimationController(vsync: this);
+
     _isKeepScreenOn(isAppRestarted: true);
+
+    // Notification Copy
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      locationTrackerBloc.add(
+        LocationTrackerEvent.setLocationTrackingNotificationCopy(
+          locationTrackingActiveTitle: context.l10n.locationTrackingActiveTitle,
+          locationTrackingActiveLabel: context.l10n.locationTrackingActiveLabel,
+        ),
+      );
+    });
 
     // Restore Tracking
     locationTrackerBloc.add(const LocationTrackerEvent.restoreLocationTracking());
@@ -67,34 +80,47 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
   Widget build(BuildContext context) {
     return BlocListener<LocationTrackerBloc, LocationTrackerState>(
       listener: (context, state) {
-        if (state.stateLocationTracking == RequestStatus.restored) {
-          // Calculate duration
-          final startedTime = DateTime.parse(state.activeTrackingStartedTime!);
-          final elapsed = DateTime.now().difference(startedTime);
+        switch (state.stateLocationTracking) {
+          case RequestStatus.restored:
+            // Calculate duration
+            final startedTime = DateTime.parse(state.activeTrackingStartedTime!);
+            final elapsed = DateTime.now().difference(startedTime);
 
-          _animationController.repeat();
-          setState(() {
-            _elapsed = elapsed;
-            isAnimationPlaying = true;
-          });
-          _startDurationTimer();
-          _isKeepScreenOn();
-        }
+            // Handle animation
+            _animationController.repeat();
+            setState(() {
+              _elapsed = elapsed;
+              isAnimationPlaying = true;
+            });
+            _startDurationTimer();
+            _isKeepScreenOn();
+            break;
 
-        if (state.stateLocationTracking == RequestStatus.error) {
-          setState(() {
-            _animationController.stop();
-            isAnimationPlaying = false;
-          });
-          showDialog(
-            context: context,
-            builder: (context) => CustomDialog.error(title: state.errorMessage),
-          );
-        } else if (_hasTracked && state.stateLocationTracking == RequestStatus.idle && state.activeTrackingId == null) {
-          _hasTracked = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.locationTrackingSavedMessage), behavior: SnackBarBehavior.floating),
-          );
+          case RequestStatus.error:
+            setState(() {
+              _animationController.stop();
+              isAnimationPlaying = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorCode?.toMessage(context) ?? context.l10n.generalError),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            break;
+
+          case RequestStatus.idle:
+            if (_hasTracked && state.activeTrackingId == null) {
+              _hasTracked = false;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.l10n.locationTrackingSavedMessage), behavior: SnackBarBehavior.floating),
+              );
+            }
+            break;
+
+          case RequestStatus.loading:
+          case RequestStatus.success:
+            break;
         }
       },
       child: Scaffold(
@@ -342,19 +368,38 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
   }
 
   void _startTracking() async {
-    final notificationPermissionStatus = await Permission.notification.request();
-    if (!mounted) return;
-    if (notificationPermissionStatus.isDenied || notificationPermissionStatus.isPermanentlyDenied) {
-      showDialog(
-        context: context,
-        builder: (context) => CustomDialog.info(
-          twoButtonVariants: true,
-          title: context.l10n.permissionIssueTitle,
-          description: context.l10n.notificationPermissionDeniedDesc,
-          onPositiveTap: () => openAppSettings(),
-        ),
-      );
-      return;
+    if (Platform.isAndroid) {
+      final notificationPermissionStatus = await Permission.notification.request();
+      if (!mounted) return;
+      if (notificationPermissionStatus.isDenied || notificationPermissionStatus.isPermanentlyDenied) {
+        showDialog(
+          context: context,
+          builder: (context) => CustomDialog.info(
+            twoButtonVariants: true,
+            title: context.l10n.permissionIssueTitle,
+            description: context.l10n.notificationPermissionDeniedDesc,
+            onPositiveTap: () => openAppSettings(),
+          ),
+        );
+        return;
+      }
+    }
+
+    if (Platform.isIOS) {
+      final notificationPermission = await FlutterForegroundTask.requestNotificationPermission();
+      if (!mounted) return;
+      if (notificationPermission != NotificationPermission.granted) {
+        showDialog(
+          context: context,
+          builder: (context) => CustomDialog.info(
+            twoButtonVariants: true,
+            title: context.l10n.permissionIssueTitle,
+            description: context.l10n.notificationPermissionDeniedDesc,
+            onPositiveTap: () => openAppSettings(),
+          ),
+        );
+        return;
+      }
     }
 
     final locationPermissionStatus = await LocationPermissionHelper().handleLocationPermission();

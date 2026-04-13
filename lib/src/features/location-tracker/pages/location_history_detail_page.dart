@@ -122,7 +122,13 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
                             : Column(
                                 children: [
                                   Expanded(child: _map(details)),
-                                  _informationBottomSheet(data: data, start: start, end: end, accuracy: lastAccuracy),
+                                  _informationBottomSheet(
+                                    data: data,
+                                    totalDetails: details.length,
+                                    start: start,
+                                    end: end,
+                                    accuracy: lastAccuracy,
+                                  ),
                                 ],
                               ),
                       ),
@@ -258,6 +264,7 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
 
   Widget _informationBottomSheet({
     required TrackedLocationDataModel data,
+    required int totalDetails,
     required DateTime start,
     required DateTime? end,
     required String? accuracy,
@@ -290,6 +297,8 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
               _statItem(Icons.timer_outlined, TimeHelper().duration(data.duration), l10n.durationLabel),
               Container(width: 1, height: 36, color: ColorName.divGrey),
               _statItem(Icons.gps_fixed_sharp, accuracy.capitalizeWords() ?? '-', l10n.accuracyLabel),
+              Container(width: 1, height: 36, color: ColorName.divGrey),
+              _statItem(Icons.pin_drop_outlined, totalDetails.toString(), l10n.recordsLabel),
             ],
           ),
         ],
