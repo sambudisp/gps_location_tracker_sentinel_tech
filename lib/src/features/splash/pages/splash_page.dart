@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gps_location_tracker_sentinel_tech/assets/colors.gen.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/core/core.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/shared.dart';
 
 import '../../../../../assets/assets.dart';
 

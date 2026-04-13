@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/core/enums/error_codes.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/utils/shared_value.dart';
 
 extension ErrorCodeHelpers on ErrorCodes {
   String toMessage(BuildContext context) {

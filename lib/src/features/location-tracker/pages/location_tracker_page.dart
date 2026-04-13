@@ -6,19 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/features/setting/core/core.dart';
-import 'package:lottie/lottie.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/features/location-tracker/pages/widgets/widgets.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/shared.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../../../assets/colors.gen.dart';
-import '../../../components/components.dart';
 import '../../../core/core.dart';
+import '../../setting/core/core.dart';
 import '../../setting/domain/domain.dart';
 import '../core/core.dart';
-import '../core/enums/location_status.dart';
-import '../core/helpers/location_permission_helper.dart';
 import '../managers/bloc.dart';
 
 class LocationTrackerPage extends StatefulWidget {
@@ -132,13 +128,23 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
               child: Column(
                 children: [
                   context.vWhitespace(context.dimens16pt),
-                  _header(),
+                  LocationTrackerHeader(onSettingTap: () => context.pushNamed(SettingRouter.setting)),
                   context.vWhitespace(context.dimens28pt),
-                  _locationTrackingCard(),
+                  LocationTrackerCard(animationController: _animationController, formattedDuration: _formattedDuration),
                   context.vWhitespace(context.dimens28pt),
-                  _locationHistoryButton(),
+                  LocationHistoryButton(
+                    onTap: () {
+                      context.pushNamed(LocationTrackerRouter.locationHistory);
+                    },
+                  ),
                   context.vWhitespace(context.dimens16pt),
-                  _takeNowButton(),
+                  BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
+                    buildWhen: (prev, curr) => prev.activeTrackingId != curr.activeTrackingId,
+                    builder: (context, state) {
+                      final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
+                      return TrackNowButton(onTap: _onToggleAnimation, isTracking: isTracking);
+                    },
+                  ),
                   context.vWhitespace(context.dimens32pt),
                 ],
               ),
@@ -146,174 +152,6 @@ class _LocationTrackerPageState extends State<LocationTrackerPage> with SingleTi
           ),
         ),
       ),
-    );
-  }
-
-  Widget _header() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            context.hWhitespace(42),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${context.l10n.sentinelTech.split(' ').first} ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${context.l10n.sentinelTech.split(' ').last} ',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                context.pushNamed(SettingRouter.setting);
-              },
-              borderRadius: context.borderRadius48pt,
-              child: Container(
-                padding: EdgeInsets.all(context.dimens10pt),
-                decoration: BoxDecoration(color: ColorName.white.withValues(alpha: 0.1), shape: BoxShape.circle),
-                child: const Icon(Icons.settings, color: ColorName.white, size: 22),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          context.l10n.appNameTitle,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 1.2),
-        ),
-      ],
-    );
-  }
-
-  Widget _locationTrackingCard() {
-    final l10n = context.l10n;
-    return Expanded(
-      child: BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
-        buildWhen: (prev, curr) => prev.activeTrackingId != curr.activeTrackingId,
-        builder: (context, state) {
-          final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
-          final instructionLabel = isTracking
-              ? l10n.locationTrackingActiveLabel
-              : l10n.locationTrackingInstructionLabel;
-
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 40),
-            decoration: BoxDecoration(color: ColorName.white, borderRadius: context.borderRadius28pt),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.durationLabel,
-                      style: TextStyle(color: Colors.grey.shade400, fontSize: 22, fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      _formattedDuration,
-                      style: TextStyle(color: ColorName.primary, fontSize: 22, fontWeight: FontWeight.w800),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                _animationBackground(),
-                const Spacer(),
-                Text(
-                  instructionLabel,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: ColorName.black, fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _animationBackground() {
-    return Container(
-      width: 200,
-      height: 200,
-      decoration: BoxDecoration(color: ColorName.secondary.withValues(alpha: 0.6), shape: BoxShape.circle),
-      child: Center(
-        child: Lottie.asset(
-          'assets/lottie/walking.json',
-          controller: _animationController,
-          onLoaded: (composition) {
-            _animationController.duration = composition.duration;
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _locationHistoryButton() {
-    return InkWell(
-      onTap: () {
-        context.pushNamed(LocationTrackerRouter.locationHistory);
-      },
-      child: Container(
-        height: 54,
-        decoration: BoxDecoration(color: ColorName.primaryAlt, borderRadius: context.borderRadius100pt),
-        child: Center(
-          child: Text(
-            context.l10n.locationHistoryLabel.toUpperCase(),
-            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 1.2),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _takeNowButton() {
-    final l10n = context.l10n;
-    return BlocBuilder<LocationTrackerBloc, LocationTrackerState>(
-      buildWhen: (prev, curr) => prev.activeTrackingId != curr.activeTrackingId,
-      builder: (context, state) {
-        final isTracking = state.activeTrackingId != null && state.activeTrackingId != 0;
-        final buttonTrackLabel = isTracking ? l10n.stopTrackLabel : l10n.trackNowLabel;
-
-        return InkWell(
-          onTap: _onToggleAnimation,
-          child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              color: isTracking ? ColorName.coralRed : ColorName.yellow,
-              borderRadius: context.borderRadius100pt,
-            ),
-            child: Center(
-              child: Text(
-                buttonTrackLabel.toUpperCase(),
-                style: TextStyle(
-                  color: isTracking ? ColorName.white : ColorName.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 

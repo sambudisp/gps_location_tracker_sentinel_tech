@@ -1,6 +1,4 @@
 export 'config/app_router.dart';
-export 'constants/app_decoration.dart';
-export 'constants/app_theme.dart';
 export 'db/db_helper.dart';
 export 'db/db_sqflite_helper.dart';
 export 'db/db_status.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
 import 'package:gps_location_tracker_sentinel_tech/src/features/setting/managers/bloc.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/features/setting/pages/widgets/widgets.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/shared.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../../assets/colors.gen.dart';
 import '../../../core/core.dart';
@@ -51,7 +51,6 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   String _appVersion = '';
-  bool _isPageReady = false;
 
   @override
   void initState() {
@@ -100,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
               child: SafeArea(
                 child: Column(
                   children: [
-                    _appBar(),
+                    CustomAppBar(title: l10n.settingLabel),
                     context.vWhitespace(4),
                     Expanded(
                       child: ClipRRect(
@@ -125,8 +124,8 @@ class _SettingPageState extends State<SettingPage> {
                                       ),
                                     )
                                   : SizedBox.shrink(),
-                              _sectionLabel(l10n.trackingLabel),
-                              _chipCard<GpsTrackingInterval>(
+                              SectionLabel(label: l10n.trackingLabel),
+                              ChipCard<GpsTrackingInterval>(
                                 icon: Icons.timer_outlined,
                                 title: l10n.intervalLabel,
                                 subtitle: l10n.intervalDesc,
@@ -139,7 +138,7 @@ class _SettingPageState extends State<SettingPage> {
                                 isLoading: state.intervalState == RequestStatus.loading,
                               ),
                               context.vWhitespace(10),
-                              _chipCard<GpsAccuracy>(
+                              ChipCard<GpsAccuracy>(
                                 icon: Icons.gps_fixed,
                                 title: l10n.gpsAccuracyLabel,
                                 subtitle: l10n.gpsAccuracyDesc,
@@ -152,8 +151,8 @@ class _SettingPageState extends State<SettingPage> {
                                 isLoading: state.accuracyState == RequestStatus.loading,
                               ),
                               context.vWhitespace(16),
-                              _sectionLabel(l10n.behaviourLabel),
-                              _toggleCard(
+                              SectionLabel(label: l10n.behaviourLabel),
+                              ToggleCard(
                                 icon: Icons.screen_lock_portrait_outlined,
                                 title: l10n.keepScreenOnLabel,
                                 subtitle: l10n.keepScreenOnDesc,
@@ -164,8 +163,8 @@ class _SettingPageState extends State<SettingPage> {
                                 },
                               ),
                               context.vWhitespace(16),
-                              _sectionLabel(l10n.aboutLabel),
-                              _infoCard(icon: Icons.info_outline, title: l10n.appVersionLabel, trailing: _appVersion),
+                              SectionLabel(label: l10n.aboutLabel),
+                              InfoCard(icon: Icons.info_outline, title: l10n.appVersionLabel, trailing: _appVersion),
                               context.vWhitespace(10),
                             ],
                           ),
@@ -178,234 +177,6 @@ class _SettingPageState extends State<SettingPage> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _appBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), shape: BoxShape.circle),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              context.l10n.settingLabel,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
-            ),
-          ),
-          context.hWhitespace(16),
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 8),
-      child: Text(
-        label.toUpperCase(),
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2),
-      ),
-    );
-  }
-
-  Widget _chipCard<T>({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required List<T> values,
-    required T selected,
-    required String Function(T) labelOf,
-    required ValueChanged<T> onChanged,
-    bool isLoading = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: ColorName.primary, size: 18),
-              context.hWhitespace(8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(color: ColorName.black, fontSize: 14, fontWeight: FontWeight.w700),
-                    ),
-                    Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          context.vWhitespace(12),
-          isLoading
-              ? _chipShimmer()
-              : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: values.map((v) {
-                    final isSelected = v == selected;
-                    return GestureDetector(
-                      onTap: () => onChanged(v),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 180),
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                        decoration: BoxDecoration(
-                          color: isSelected ? ColorName.primary : const Color(0xFFF0F4F8),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Text(
-                          labelOf(v),
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.grey,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-        ],
-      ),
-    );
-  }
-
-  Widget _chipShimmer() {
-    return Shimmer.fromColors(
-      baseColor: const Color(0xFFE0E0E0),
-      highlightColor: const Color(0xFFF5F5F5),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [40.0, 50.0, 45.0, 35.0].map((width) {
-          return Container(
-            width: width,
-            height: 30,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _toggleCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-    bool isLoading = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      child: isLoading
-          ? _toggleShimmer()
-          : Row(
-              children: [
-                Icon(icon, color: ColorName.primary, size: 18),
-                context.hWhitespace(10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(color: ColorName.darkBlue, fontSize: 14, fontWeight: FontWeight.w700),
-                      ),
-                      Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12, height: 1.4)),
-                    ],
-                  ),
-                ),
-                context.hWhitespace(10),
-                Switch(
-                  value: value,
-                  onChanged: onChanged,
-                  activeColor: Colors.white,
-                  activeTrackColor: ColorName.primary,
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: const Color(0xFFDDDDDD),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ],
-            ),
-    );
-  }
-
-  Widget _toggleShimmer() {
-    return Shimmer.fromColors(
-      baseColor: const Color(0xFFE0E0E0),
-      highlightColor: const Color(0xFFF5F5F5),
-      child: Row(
-        children: [
-          Container(
-            width: 18,
-            height: 18,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-          ),
-          context.hWhitespace(10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 100,
-                  height: 12,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-                ),
-                context.vWhitespace(6),
-                Container(
-                  width: 160,
-                  height: 10,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-                ),
-              ],
-            ),
-          ),
-          context.hWhitespace(10),
-          Container(
-            width: 44,
-            height: 24,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _infoCard({required IconData icon, required String title, required String trailing}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      child: Row(
-        children: [
-          Icon(icon, color: ColorName.primary, size: 18),
-          context.hWhitespace(10),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(color: ColorName.darkBlue, fontSize: 14, fontWeight: FontWeight.w700),
-            ),
-          ),
-          Text(trailing, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-        ],
       ),
     );
   }

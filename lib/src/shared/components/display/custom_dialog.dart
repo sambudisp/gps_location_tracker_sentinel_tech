@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gps_location_tracker_sentinel_tech/assets/colors.gen.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/utils/shared_value.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/utils/shared_value.dart';
 
-import '../../../assets/assets.dart';
+import '../../../../assets/assets.gen.dart';
 import '../interactive/button.dart';
 
 enum DialogStyle {

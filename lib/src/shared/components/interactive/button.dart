@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_location_tracker_sentinel_tech/assets/colors.gen.dart';
-import 'package:gps_location_tracker_sentinel_tech/src/core/constants/app_theme.dart';
+import 'package:gps_location_tracker_sentinel_tech/src/shared/constants/app_theme.dart';
 
 enum ButtonStyle { filled, outlined }
 
@@ -70,10 +70,7 @@ class Button extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           side: style.isFilled
               ? BorderSide.none
-              : BorderSide(
-                  color: enabled ? color : Colors.grey.shade300,
-                  width: 1.2,
-                ),
+              : BorderSide(color: enabled ? color : Colors.grey.shade300, width: 1.2),
         ),
         elevation: 0.0,
         highlightElevation: 0.0,
@@ -83,20 +80,21 @@ class Button extends StatelessWidget {
         splashColor: style.isFilled ? Colors.white.withValues(alpha: 0.2) : color.withValues(alpha: 0.2),
         disabledColor: style.isFilled ? Colors.grey.shade300 : null,
         disabledTextColor: Colors.white,
-        child: widget ??
+        child:
+            widget ??
             Text(
               label,
               style: (textStyle != null)
                   ? textStyle
                   : style.isFilled
-                      ? AppTheme.darkTextTheme.displaySmall?.copyWith(
-                          color: enabled ? textColor : Colors.white,
-                          fontSize: 16.0,
-                        )
-                      : AppTheme.lightTextTheme.displaySmall?.copyWith(
-                          color: enabled ? textColor : Colors.grey.shade300,
-                          fontSize: 16.0,
-                        ),
+                  ? AppTheme.darkTextTheme.displaySmall?.copyWith(
+                      color: enabled ? textColor : Colors.white,
+                      fontSize: 16.0,
+                    )
+                  : AppTheme.lightTextTheme.displaySmall?.copyWith(
+                      color: enabled ? textColor : Colors.grey.shade300,
+                      fontSize: 16.0,
+                    ),
               textAlign: TextAlign.center,
               maxLines: maxLines,
             ),

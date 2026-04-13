@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gps_location_tracker_sentinel_tech/l10n/app_localizations.dart';
 
-import '../../components/components.dart';
+import '../../shared/components/components.dart';
 
 extension KtSharedValue on BuildContext {
   /// Get access to typography for text style property
