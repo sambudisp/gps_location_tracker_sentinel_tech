@@ -114,11 +114,12 @@ class LocationTrackerLocalDatasource {
     try {
       await dbSqfliteHelper.execRawDelete('''
           DELETE FROM tracked_location_detail
-          WHERE parent_id IN (
+          WHERE parent_id NOT IN (
             SELECT id FROM tracked_location
-            WHERE stopped_time IS NOT NULL
+            WHERE stopped_time IS NULL
           )
         ''');
+
       final result = await dbSqfliteHelper.execRawDelete('''
           DELETE FROM tracked_location
           WHERE stopped_time IS NOT NULL

@@ -38,7 +38,10 @@ class LocationForegroundTask extends TaskHandler {
       );
 
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(accuracy: accuracyString.toGpsAccuracy().toLocationAccuracy()),
+        locationSettings: LocationSettings(
+          accuracy: accuracyString.toGpsAccuracy().toLocationAccuracy(),
+          timeLimit: Duration(seconds: 4),
+        ),
       );
 
       final data = TrackedLocationDataDetailModel(

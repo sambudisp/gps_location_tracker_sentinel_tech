@@ -93,7 +93,14 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
           setState(() {
             _mapData(state.trackedLocationHistoryDetail);
           });
-        } else if (state.stateTrackedLocationHistoryDetail == RequestStatus.error) {}
+        } else if (state.stateTrackedLocationHistoryDetail == RequestStatus.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorCode?.toMessage(context) ?? context.l10n.generalError),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       },
       builder: (context, state) {
         final data = widget.trackedLocationData;
@@ -161,10 +168,8 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
             mapToolbarEnabled: false,
             onMapCreated: (controller) {
               _mapController = controller;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                final waypoints = details.map((e) => LatLng(e.latitude, e.longitude)).toList();
-                _fitBounds(waypoints);
-              });
+              final waypoints = details.map((e) => LatLng(e.latitude, e.longitude)).toList();
+              _fitBounds(waypoints);
             },
           ),
           Positioned(
@@ -187,7 +192,7 @@ class _LocationHistoryDetailPageState extends State<LocationHistoryDetailPage> {
               ),
             ),
           ),
-          LocationHistoryDetailMapLegend(),
+          Positioned(top: 12, left: 12, child: LocationHistoryDetailMapLegend()),
         ],
       ),
     );

@@ -9,34 +9,30 @@ class LocationHistoryDetailMapLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Positioned(
-      top: 12,
-      left: 12,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: ColorName.white,
-          borderRadius: context.borderRadius28pt,
-          boxShadow: [BoxShadow(color: ColorName.black.withValues(alpha: 0.08), blurRadius: 6)],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _legendDot(ColorName.green),
-            context.hWhitespace(4),
-            Text(
-              l10n.startLabel,
-              style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
-            ),
-            context.hWhitespace(10),
-            _legendDot(ColorName.coralRed),
-            context.hWhitespace(4),
-            Text(
-              l10n.endLabel,
-              style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: ColorName.white,
+        borderRadius: context.borderRadius28pt,
+        boxShadow: [BoxShadow(color: ColorName.black.withValues(alpha: 0.08), blurRadius: 6)],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _legendDot(ColorName.green),
+          context.hWhitespace(4),
+          Text(
+            l10n.startLabel,
+            style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
+          ),
+          context.hWhitespace(10),
+          _legendDot(ColorName.coralRed),
+          context.hWhitespace(4),
+          Text(
+            l10n.endLabel,
+            style: const TextStyle(fontSize: 10, color: ColorName.black, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }

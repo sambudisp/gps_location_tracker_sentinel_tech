@@ -17,32 +17,33 @@ class LocationTrackerBloc extends Bloc<LocationTrackerEvent, LocationTrackerStat
   final LocationTrackerRepository locationTrackerRepository;
   final SettingRepository settingRepository;
 
+  Future<void> insertCurrentLocation({required int parentId}) async {
+    try {
+      final accuracySetting = await settingRepository.getGpsAccuracy();
+      final accuracyString =
+          accuracySetting.fold((failure) => GpsAccuracy.high.name, (value) => value?.name) ?? GpsAccuracy.high.name;
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: accuracyString.toGpsAccuracy().toLocationAccuracy(),
+          timeLimit: Duration(seconds: 10),
+        ),
+      );
+
+      final detail = TrackedLocationDataDetailModel(
+        parentId: parentId,
+        latitude: position.latitude,
+        longitude: position.longitude,
+        timestamp: DateTime.now().toIso8601String(),
+        accuracy: position.accuracy.toAccuracyLevel().name,
+      );
+
+      await locationTrackerRepository.inputTrackedLocationDataDetail(detail);
+    } catch (e) {}
+  }
+
   LocationTrackerBloc(@visibleForTesting this.locationTrackerRepository, this.settingRepository)
     : super(const _Initial()) {
-    Future<void> insertCurrentLocation({required int parentId}) async {
-      try {
-        final accuracySetting = await settingRepository.getGpsAccuracy();
-        final accuracyString =
-            accuracySetting.fold((failure) => GpsAccuracy.high.name, (value) => value?.name) ?? GpsAccuracy.high.name;
-
-        final position = await Geolocator.getCurrentPosition(
-          locationSettings: LocationSettings(accuracy: accuracyString.toGpsAccuracy().toLocationAccuracy()),
-        );
-
-        final detail = TrackedLocationDataDetailModel(
-          parentId: parentId,
-          latitude: position.latitude,
-          longitude: position.longitude,
-          timestamp: DateTime.now().toIso8601String(),
-          accuracy: position.accuracy.toAccuracyLevel().name,
-        );
-
-        await locationTrackerRepository.inputTrackedLocationDataDetail(detail);
-      } catch (e) {
-        //debugPrint('insertCurrentLocation error: $e');
-      }
-    }
-
     on<_StartLocationTracking>((event, emit) async {
       emit(state.copyWith(stateLocationTracking: RequestStatus.loading));
       final startedTime = DateTime.now().toIso8601String();
