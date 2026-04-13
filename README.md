@@ -114,6 +114,7 @@ Cross-feature utilities :
 - **Localization** — activate the Indonesian translation that has already been prepared in the `.arb` files.
 - **Battery Optimization** — app doesn't have a best practice for battery optimization and I need to research more.
 - **Research** — more research in Background Tracking especially on iOS.
+- **Pause Button** — Add Pause Button for user so they can hold the location tracking temporarily.
 
 ---
 
