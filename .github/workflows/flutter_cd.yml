@@ -19,14 +19,11 @@ jobs:
       - name: Setup PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
 
-      - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-          echo "flutter.minSdkVersion=23" >> android/local.properties
-          echo "flutter.ndkVersion=27.0.12077973" >> android/local.properties
-          
-      - name: Print local.properties
-        run: cat android/local.properties
+      #- name: Create local.properties
+      #  run: |
+      #    echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+      #    echo "flutter.minSdkVersion=23" >> android/local.properties
+      #    echo "flutter.ndkVersion=27.0.12077973" >> android/local.properties
 
       - name: Install dependencies
         run: flutter pub get
