@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-and-deploy:
+    if: contains(github.event.head_commit.message, 'build')
     runs-on: ubuntu-latest
 
     steps:
@@ -15,6 +16,9 @@ jobs:
         with:
           flutter-version: '3.32.1'
           channel: 'stable'
+
+      - name: Install Android NDK 27
+        run: sdkmanager "ndk;27.0.12077973"
 
       - name: Setup PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
