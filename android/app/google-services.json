@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "937350059394",
+    "project_id": "gps-location-tracker-87a14",
+    "storage_bucket": "gps-location-tracker-87a14.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937350059394:android:e493d71de3769e0de7ab9b",
+        "android_client_info": {
+          "package_name": "com.example.gps_location_tracker_sentinel_tech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYWy_Za2WvRRzaN5Jp_v6qdyS-zIXA72c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
