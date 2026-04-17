@@ -20,14 +20,6 @@ jobs:
       - name: Setup PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
 
-      - name: Add Android SDK cmdline-tools to PATH
-        run: |
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH    
-
-      - name: Install Android NDK 27
-        run: sdkmanager "ndk;27.0.12077973"
-
       - name: Install dependencies
         run: flutter pub get
 
