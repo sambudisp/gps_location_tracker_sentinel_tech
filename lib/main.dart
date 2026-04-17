@@ -11,6 +11,7 @@ import 'src/core/injection/injector.dart' as di;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Init Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // DB
